@@ -1,5 +1,7 @@
 package com.example.ck_android.repositories
 
+import com.example.ck_android.model.ChatRequest
+import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
 import com.example.ck_android.model.GrammarItemResponse
@@ -44,4 +46,11 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Path("slug") slug: String
     ): GrammarItemResponse
+
+    // api chatGpt
+    @POST("chat")
+    suspend fun chatGpt(
+        @Header("Authorization") access_token: String,
+        @Body chatRequest: ChatRequest
+    ): ChatResponse
 }

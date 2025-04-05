@@ -1,5 +1,7 @@
 package com.example.ck_android.repositories
 
+import com.example.ck_android.model.ChatRequest
+import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
 import com.example.ck_android.model.GrammarItemResponse
@@ -41,6 +43,13 @@ class ApiServiceImpl @Inject constructor(
         slug: String
     ): GrammarItemResponse {
         return apiClient.apiService.getGrammarItem(access_token, slug)
+    }
+
+    override suspend fun chatGpt(
+        access_token: String,
+        chatRequest: ChatRequest
+    ): ChatResponse {
+        return apiClient.apiService.chatGpt(access_token, chatRequest)
     }
 
 

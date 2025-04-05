@@ -66,6 +66,13 @@ dependencies {
     implementation libs.okio
 
 
+    implementation libs.material3
+
+    implementation libs.androidx.media3.exoplayer
+
+    implementation libs.androidx.activity.ktx
+
+    implementation libs.ui
 
 
     testImplementation libs.junit

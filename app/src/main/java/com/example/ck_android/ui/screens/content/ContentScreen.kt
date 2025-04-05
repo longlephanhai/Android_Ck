@@ -27,7 +27,7 @@ fun ContentScreen(
 //        "Từ vựng theo chủ đề",
 //        "Luyện thi Toeic online",
 //        "Luyện viết với AI",
-//        "Luyện nói với AI"
+        "Luyện nói với AI" to Screen.SpeakAi.route
     )
 
     Column(

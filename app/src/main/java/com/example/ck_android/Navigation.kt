@@ -26,6 +26,8 @@ import com.example.ck_android.ui.screens.login.LoginScreen
 import com.example.ck_android.ui.screens.login.LoginViewModel
 import com.example.ck_android.ui.screens.register.RegisterScreen
 import com.example.ck_android.ui.screens.register.RegisterViewModel
+import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
+import com.example.ck_android.ui.screens.speakAI.SpeakAIViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
 
@@ -38,6 +40,7 @@ sealed class Screen(val route: String) {
     object Content : Screen("content")
     object Grammar : Screen("grammar")
     object GrammarItem : Screen("grammar_item/{slug}")
+    object SpeakAi : Screen("speak_ai")
 }
 
 @Composable
@@ -117,6 +120,13 @@ fun Navigation() {
                 grammarItemViewModel = hiltViewModel<GrammarItemViewModel>(),
                 mainViewModel = mainViewModel,
                 slug = backStackEntry.arguments?.getString("slug") ?: ""
+            )
+        }
+        composable(Screen.SpeakAi.route) {
+            SpeakAIScreen(
+                navController = navController,
+                speakAIViewModel = hiltViewModel<SpeakAIViewModel>(),
+                mainViewModel = mainViewModel
             )
         }
     }
