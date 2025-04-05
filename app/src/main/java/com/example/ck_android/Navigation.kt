@@ -1,7 +1,6 @@
 package com.example.ck_android
 
 import android.widget.Toast
-import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +14,8 @@ import com.example.ck_android.ui.screens.home.HomeScreen
 import com.example.ck_android.ui.screens.home.HomeViewModel
 import com.example.ck_android.ui.screens.login.LoginScreen
 import com.example.ck_android.ui.screens.login.LoginViewModel
+import com.example.ck_android.ui.screens.register.RegisterScreen
+import com.example.ck_android.ui.screens.register.RegisterViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
 
@@ -22,6 +23,7 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
     object Start : Screen("start")
+    object Register : Screen("register")
 }
 
 @Composable
@@ -51,10 +53,17 @@ fun Navigation() {
                 mainViewModel
             )
         }
-        composable(Screen.Login.route){
+        composable(Screen.Login.route) {
             LoginScreen(
                 navController,
                 loginViewModel = hiltViewModel<LoginViewModel>(),
+                mainViewModel
+            )
+        }
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                navController,
+                registerViewModel = hiltViewModel<RegisterViewModel>(),
                 mainViewModel
             )
         }

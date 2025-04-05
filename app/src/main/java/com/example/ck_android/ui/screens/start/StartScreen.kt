@@ -104,7 +104,7 @@ fun StartScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(
-                onClick = { navController.navigate(Screen.Login.route)},
+                onClick = { navController.navigate(Screen.Login.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -125,7 +125,7 @@ fun StartScreen(
                     color = Color(0xFF1877F2),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
-                    modifier = Modifier.clickable { /* Chuyển sang màn hình đăng ký */ }
+                    modifier = Modifier.clickable { navController.navigate(Screen.Register.route) }
                 )
             }
         }
@@ -147,7 +147,13 @@ fun SocialLoginButton(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .then(if (borderColor != null) Modifier.border(1.dp, borderColor, RoundedCornerShape(50.dp)) else Modifier),
+            .then(
+                if (borderColor != null) Modifier.border(
+                    1.dp,
+                    borderColor,
+                    RoundedCornerShape(50.dp)
+                ) else Modifier
+            ),
         shape = RoundedCornerShape(50.dp)
     ) {
         Icon(

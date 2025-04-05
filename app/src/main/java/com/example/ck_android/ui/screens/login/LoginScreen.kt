@@ -167,7 +167,7 @@ fun LoginScreen(
                             color = blueColor,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
-                                println("Register Clicked!")
+                                navController.navigate(Screen.Register.route)
                             }
                         )
                     }

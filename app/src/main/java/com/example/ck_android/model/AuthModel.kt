@@ -1,5 +1,6 @@
 package com.example.ck_android.model
 
+import android.net.Uri
 import com.example.ck_android.common.enum.LoadStatus
 
 data class LoginRespon(
@@ -17,6 +18,25 @@ data class LoginRequest(
 data class LoginData(
     val user: User,
     val access_token: String
+)
+
+data class RegisterRequest(
+    var avatar: Uri? = null,
+    val email: String = "",
+    val name: String = "",
+    val password: String = "",
+    val phone: String = "",
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class RegisterResponse(
+    val statusCode: Int,
+    val message: String,
+    val data: RegisterData,
+)
+
+data class RegisterData(
+    val _id: String,
 )
 
 data class User(
