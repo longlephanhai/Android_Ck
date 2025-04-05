@@ -1,6 +1,5 @@
 package com.example.ck_android.ui.screens.check_code
 
-import android.view.Display
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
