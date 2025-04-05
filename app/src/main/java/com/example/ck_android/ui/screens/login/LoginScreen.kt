@@ -62,7 +62,6 @@ fun LoginScreen(
                     }
                 }
             }
-
         } else {
             if (state.value.status is LoadStatus.Error) {
                 mainViewModel.setError(state.value.status.description)

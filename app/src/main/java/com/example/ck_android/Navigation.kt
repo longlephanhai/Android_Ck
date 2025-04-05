@@ -16,6 +16,8 @@ import com.example.ck_android.ui.screens.check_code.CheckCodeScreen
 import com.example.ck_android.ui.screens.check_code.CheckCodeViewModel
 import com.example.ck_android.ui.screens.content.ContentScreen
 import com.example.ck_android.ui.screens.content.ContentViewModel
+import com.example.ck_android.ui.screens.grammar.GrammarItemScreen
+import com.example.ck_android.ui.screens.grammar.GrammarItemViewModel
 import com.example.ck_android.ui.screens.grammar.GrammarScreen
 import com.example.ck_android.ui.screens.grammar.GrammarViewModel
 import com.example.ck_android.ui.screens.home.HomeScreen
@@ -35,6 +37,7 @@ sealed class Screen(val route: String) {
     object CheckCode : Screen("check_code")
     object Content : Screen("content")
     object Grammar : Screen("grammar")
+    object GrammarItem : Screen("grammar_item/{slug}")
 }
 
 @Composable
@@ -103,6 +106,17 @@ fun Navigation() {
                 navController,
                 grammarViewModel = hiltViewModel<GrammarViewModel>(),
                 mainViewModel
+            )
+        }
+        composable(
+            Screen.GrammarItem.route,
+            arguments = listOf(navArgument("slug") { type = NavType.StringType })
+        ) { backStackEntry ->
+            GrammarItemScreen(
+                navController = navController,
+                grammarItemViewModel = hiltViewModel<GrammarItemViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = backStackEntry.arguments?.getString("slug") ?: ""
             )
         }
     }

@@ -2,6 +2,7 @@ package com.example.ck_android.repositories
 
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
@@ -14,6 +15,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface ApiService {
     // api auth
@@ -36,4 +38,10 @@ interface ApiService {
     // api grammar
     @GET("grammars")
     suspend fun getGrammars(@Header("Authorization") access_token: String): GrammarResponse
+
+    @GET("grammars/{slug}")
+    suspend fun getGrammarItem(
+        @Header("Authorization") access_token: String,
+        @Path("slug") slug: String
+    ): GrammarItemResponse
 }

@@ -15,3 +15,22 @@ data class GrammarData(
     val content: String,
     val slug: String
 )
+
+data class GrammarItemResponse(
+    val statusCode: Int = -1,
+    val message: String = "",
+    val data: GrammarItemData = GrammarItemData(
+        _id = "",
+        title = "",
+        content = "",
+        slug = ""
+    ),
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class GrammarItemData(
+    val _id: String,
+    val title: String,
+    val content: String,
+    val slug: String
+)

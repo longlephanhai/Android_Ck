@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ck_android.MainViewModel
+import com.example.ck_android.Screen
 
 
 @Composable
@@ -88,8 +89,8 @@ fun GrammarScreen(
                     )
                     Button(
                         onClick = {
-
-                            navController.navigate("grammarDetail/${item.slug}")
+                            val slug = item.slug
+                            navController.navigate(Screen.GrammarItem.route.replace("{slug}", slug))
                         },
                         modifier = Modifier
                             .weight(0.2f)

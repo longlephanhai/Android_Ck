@@ -2,10 +2,10 @@ package com.example.ck_android.repositories
 
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
-import com.example.ck_android.model.RegisterRequest
 import com.example.ck_android.model.RegisterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -34,6 +34,13 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun getGrammars(accessToken: String): GrammarResponse {
         return apiClient.apiService.getGrammars(accessToken)
+    }
+
+    override suspend fun getGrammarItem(
+        access_token: String,
+        slug: String
+    ): GrammarItemResponse {
+        return apiClient.apiService.getGrammarItem(access_token, slug)
     }
 
 
