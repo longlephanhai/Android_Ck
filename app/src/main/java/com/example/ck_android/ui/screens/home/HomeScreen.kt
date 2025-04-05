@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -43,6 +44,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ck_android.MainViewModel
 import com.example.ck_android.R
+import com.example.ck_android.Screen
+import com.example.ck_android.ui.screens.content.ContentScreen
+import com.example.ck_android.ui.screens.content.ContentViewModel
 
 sealed class BottomNavItem(
     val route: String,
@@ -50,11 +54,12 @@ sealed class BottomNavItem(
     val icon: ImageVector
 ) {
     object Home : BottomNavItem("home", "Home", Icons.Default.Home)
+    object Content : BottomNavItem("content", "Content", Icons.Default.AccountBox)
     object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
     object Settings : BottomNavItem("settings", "Settings", Icons.Default.Settings)
 
     companion object {
-        val items = listOf(Home, Profile, Settings)
+        val items = listOf(Home,Content, Profile, Settings)
     }
 }
 
@@ -63,11 +68,10 @@ sealed class BottomNavItem(
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
 ) {
     val blueColor = Color(0xFF1877F2)
     val currentRoute = remember { mutableStateOf("home") }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,7 +80,7 @@ fun HomeScreen(
                 },
                 navigationIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_logo), // Thay tên logo phù hợp
+                        painter = painterResource(id = R.drawable.ic_logo),
                         contentDescription = "Logo",
                         modifier = Modifier
                             .padding(start = 12.dp)
@@ -115,63 +119,70 @@ fun HomeScreen(
                 .padding(paddingValues)
                 .background(color = Color.White)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp)
-                    .background(color = Color.White),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                // TEXT SECTION
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.Center
+            if (currentRoute.value == "home") {
+                MainScreen(navController)
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavController) {
+    val blueColor = Color(0xFF1877F2)
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+            .background(color = Color.White),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Nâng cao kỹ năng tiếng Anh của bạn với ",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+            Text(
+                text = "Edu App",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = blueColor
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Cùng khám phá các khóa học tiếng Anh trực tuyến từ cơ bản đến nâng cao với đội ngũ giảng viên chất lượng và phương pháp học tập hiệu quả.",
+                fontSize = 16.sp,
+                color = Color.DarkGray
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Row {
+                Button(
+                    onClick = { navController.navigate(Screen.Content.route) },
+                    colors = ButtonDefaults.buttonColors(containerColor = blueColor),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(
-                        text = "Nâng cao kỹ năng tiếng Anh của bạn với ",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                    )
-                    Text(
-                        text = "Edu App",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = blueColor
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Cùng khám phá các khóa học tiếng Anh trực tuyến từ cơ bản đến nâng cao với đội ngũ giảng viên chất lượng và phương pháp học tập hiệu quả.",
-                        fontSize = 16.sp,
-                        color = Color.DarkGray
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Row {
-                        Button(
-                            onClick = { /* TODO: Điều hướng đến đăng ký hoặc học */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = blueColor),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text("Bắt đầu học", color = Color.White)
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        OutlinedButton(
-                            onClick = { /* TODO: Điều hướng đến giới thiệu */ },
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = blueColor)
-                        ) {
-                            Text("Tìm hiểu thêm")
-                        }
-                    }
-                    Image(
-                        painter = painterResource(id = R.drawable.study_illustration), // đổi tên file phù hợp
-                        contentDescription = "Study Illustration",
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    )
+                    Text("Bắt đầu học", color = Color.White)
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                OutlinedButton(
+                    onClick = { /* TODO: Điều hướng đến giới thiệu */ },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = blueColor)
+                ) {
+                    Text("Tìm hiểu thêm")
                 }
             }
+            Image(
+                painter = painterResource(id = R.drawable.study_illustration),
+                contentDescription = "Study Illustration",
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
         }
     }
 }

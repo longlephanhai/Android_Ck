@@ -14,6 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.ck_android.ui.screens.check_code.CheckCodeScreen
 import com.example.ck_android.ui.screens.check_code.CheckCodeViewModel
+import com.example.ck_android.ui.screens.content.ContentScreen
+import com.example.ck_android.ui.screens.content.ContentViewModel
+import com.example.ck_android.ui.screens.grammar.GrammarScreen
+import com.example.ck_android.ui.screens.grammar.GrammarViewModel
 import com.example.ck_android.ui.screens.home.HomeScreen
 import com.example.ck_android.ui.screens.home.HomeViewModel
 import com.example.ck_android.ui.screens.login.LoginScreen
@@ -29,6 +33,8 @@ sealed class Screen(val route: String) {
     object Start : Screen("start")
     object Register : Screen("register")
     object CheckCode : Screen("check_code")
+    object Content : Screen("content")
+    object Grammar : Screen("grammar")
 }
 
 @Composable
@@ -82,6 +88,20 @@ fun Navigation() {
             CheckCodeScreen(
                 navController,
                 checkCodeViewModel = hiltViewModel<CheckCodeViewModel>(),
+                mainViewModel
+            )
+        }
+        composable(Screen.Content.route) {
+            ContentScreen(
+                navController,
+                contentViewModel = hiltViewModel<ContentViewModel>(),
+                mainViewModel
+            )
+        }
+        composable(Screen.Grammar.route) {
+            GrammarScreen(
+                navController,
+                grammarViewModel = hiltViewModel<GrammarViewModel>(),
                 mainViewModel
             )
         }

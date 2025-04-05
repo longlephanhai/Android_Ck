@@ -2,6 +2,7 @@ package com.example.ck_android.repositories
 
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.RegisterRequest
@@ -29,6 +30,10 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun checkCode(checkCodeRequest: CheckCodeRequest): CheckCodeResponse {
         return apiClient.apiService.checkCode(checkCodeRequest)
+    }
+
+    override suspend fun getGrammars(accessToken: String): GrammarResponse {
+        return apiClient.apiService.getGrammars(accessToken)
     }
 
 
