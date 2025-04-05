@@ -1,6 +1,7 @@
 package com.example.ck_android.di
 
 import com.example.ck_android.repositories.ApiService
+import com.example.ck_android.repositories.ApiServiceImpl
 import com.example.ck_android.repositories.MainLog
 import com.example.ck_android.repositories.MainLogImpl
 import dagger.Binds
@@ -21,7 +22,7 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun bindApi(
-        apiService: ApiService
+        apiServiceImpl: ApiServiceImpl
     ): ApiService
 
 }
