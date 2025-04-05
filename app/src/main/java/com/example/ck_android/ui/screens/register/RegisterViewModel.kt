@@ -78,12 +78,17 @@ class RegisterViewModel @Inject constructor(
                     name = nameRequestBody,
                     email = emailRequestBody,
                     password = passwordRequestBody,
-                    phone = phoneRequestBody
+                    phone = phoneRequestBody,
                 )
 
                 if (response.statusCode == 201) {
                     _uiState.value =
                         _uiState.value.copy(status = LoadStatus.Success("Registration Successful"))
+                    val userId = response.data._id.toString()
+                    _uiState.value = _uiState.value.copy(
+                        status = LoadStatus.Success(response.message),
+                        _id = userId // Cập nhật _id
+                    )
                 } else {
                     _uiState.value =
                         _uiState.value.copy(status = LoadStatus.Error("Registration Failed"))

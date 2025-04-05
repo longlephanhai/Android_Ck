@@ -1,5 +1,7 @@
 package com.example.ck_android.repositories
 
+import com.example.ck_android.model.CheckCodeRequest
+import com.example.ck_android.model.CheckCodeResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.RegisterRequest
@@ -25,5 +27,8 @@ interface ApiService {
         @Part("password") password: RequestBody,
         @Part("phone") phone: RequestBody
     ): RegisterResponse
+
+    @POST("auth/check-code")
+    suspend fun checkCode(@Body checkCodeRequest: CheckCodeRequest): CheckCodeResponse
 
 }

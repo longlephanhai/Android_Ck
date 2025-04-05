@@ -6,10 +6,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.ck_android.ui.screens.check_code.CheckCodeScreen
+import com.example.ck_android.ui.screens.check_code.CheckCodeViewModel
 import com.example.ck_android.ui.screens.home.HomeScreen
 import com.example.ck_android.ui.screens.home.HomeViewModel
 import com.example.ck_android.ui.screens.login.LoginScreen
@@ -24,6 +28,7 @@ sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Start : Screen("start")
     object Register : Screen("register")
+    object CheckCode : Screen("check_code")
 }
 
 @Composable
@@ -64,6 +69,19 @@ fun Navigation() {
             RegisterScreen(
                 navController,
                 registerViewModel = hiltViewModel<RegisterViewModel>(),
+                mainViewModel
+            )
+        }
+        composable(
+            Screen.CheckCode.route + "?ID={ID}", arguments = listOf(
+                navArgument("ID") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )) {
+            CheckCodeScreen(
+                navController,
+                checkCodeViewModel = hiltViewModel<CheckCodeViewModel>(),
                 mainViewModel
             )
         }

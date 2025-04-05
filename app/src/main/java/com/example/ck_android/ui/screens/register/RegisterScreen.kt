@@ -71,7 +71,7 @@ fun RegisterScreen(
         } else if (state.value.status is LoadStatus.Success) {
             LaunchedEffect(state.value.status) {
                 if (state.value.status is LoadStatus.Success) {
-                    navController.navigate(Screen.Home.route) {
+                    navController.navigate("${Screen.CheckCode.route}?ID=${state.value._id}") {
                         popUpTo(Screen.Register.route) {
                             inclusive = true
                         }

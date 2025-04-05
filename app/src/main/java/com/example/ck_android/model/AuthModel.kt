@@ -26,6 +26,7 @@ data class RegisterRequest(
     val name: String = "",
     val password: String = "",
     val phone: String = "",
+    val _id:String="",
     val status: LoadStatus = LoadStatus.Init()
 )
 
@@ -37,6 +38,22 @@ data class RegisterResponse(
 
 data class RegisterData(
     val _id: String,
+)
+
+data class CheckCodeRequest(
+    val _id: String="",
+    val code: String="",
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class CheckCodeResponse(
+    val statusCode: Int,
+    val message: String,
+    val data: CheckCodeData,
+)
+
+data class CheckCodeData(
+    val isBeforeCheck: Boolean
 )
 
 data class User(
