@@ -18,11 +18,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,12 +44,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ck_android.MainViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun ToeicExamScreen(
@@ -49,8 +60,11 @@ fun ToeicExamScreen(
     mainViewModel: MainViewModel,
     id: String
 ) {
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+    val paddingVertical = (screenHeight * 0.1f).dp
+
     val questionData = toeicExamViewModel.question.collectAsState()
-    val toeicExamData = toeicExamViewModel.toeicExam.collectAsState()
 
     LaunchedEffect(Unit) {
         toeicExamViewModel.getQuestionToeic(toeicExamViewModel.getToken() ?: "", id)
@@ -60,53 +74,65 @@ fun ToeicExamScreen(
     val baseUrl = "http://10.0.2.2:8080/"
 //    val baseUrl="https://education-be-tuv3.onrender.com/"
     val audioUrl = baseUrl + navController.previousBackStackEntry?.arguments?.getString("audioUrl")
-    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
-    var isAudioPlaying by remember { mutableStateOf(false) }
+
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var answers by remember { mutableStateOf(mutableMapOf<Int, String>()) }
 
     var expanded by remember { mutableStateOf(false) }
 
-
-    // Hiển thị audio
-    fun playAudio() {
-        if (!isAudioPlaying) {
-            mediaPlayer?.release() // Giải phóng bộ nhớ của MediaPlayer trước đó nếu có
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(audioUrl)
-                setOnCompletionListener {
-                    release()
-                    mediaPlayer = null
-                    isAudioPlaying = false
-                }
-                prepareAsync() // Chuẩn bị âm thanh không đồng bộ
-                setOnPreparedListener {
-                    start() // Bắt đầu phát âm thanh
-                    isAudioPlaying = true
-                }
-            }
-        }
-    }
-
-
     // Hiển thị câu hỏi và lựa chọn đáp án A,B,C,D
     if (questionList.isNotEmpty()) {
         val currentQuestion = questionList[currentQuestionIndex]
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(
+                    top = paddingVertical,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = paddingVertical
+                )
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Hiển thị số câu hỏi
-            Text(
-                text = "Câu hỏi ${currentQuestion.questionNumber}",
-                style = MaterialTheme.typography.headlineSmall
-            )
+            // Hiển thị audio
+            AudioPlayer(audioUrl = audioUrl)
+            // Bảng câu hỏi
+            IconButton(
+                onClick = { expanded = !expanded },
+                modifier = Modifier.padding(top = 10.dp)
+            ) {
+                // Chọn icon tương ứng với trạng thái mở hoặc đóng bảng câu hỏi
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.Close else Icons.Filled.Menu,
+                    contentDescription = if (expanded) "Đóng bảng câu hỏi" else "Mở bảng câu hỏi"
+                )
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Hiển thị số câu hỏi
+                Text(
+                    text = "Câu hỏi ${currentQuestion.questionNumber}",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                // Button nộp bài
+                Button(
+                    onClick = {
+                        // TODO: Xử lý khi bấm nộp bài
+                    }
+                ) {
+                    Text(text = "Nộp bài")
+                }
+            }
+//            Spacer(modifier = Modifier.height(16.dp))
 
             // Hiển thị hình ảnh
             AsyncImage(
@@ -119,9 +145,10 @@ fun ToeicExamScreen(
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .aspectRatio(1f)
+                    .padding(vertical = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+//            Spacer(modifier = Modifier.height(16.dp))
 
             // Các lựa chọn A, B, C, D
             val options = listOf("A", "B", "C", "D")
@@ -141,7 +168,7 @@ fun ToeicExamScreen(
                                     }
                                 }
                             )
-                            .padding(8.dp)
+                            .padding(4.dp)
                     ) {
                         RadioButton(
                             enabled = !isExampleQuestion,
@@ -158,11 +185,13 @@ fun ToeicExamScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+//            Spacer(modifier = Modifier.height(32.dp))
 
             // Các nút "Câu trước" - "Câu tiếp theo"
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -190,13 +219,6 @@ fun ToeicExamScreen(
                     Text(text = "Câu tiếp theo")
                 }
             }
-            // Bảng câu hỏi
-            Button(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.padding(bottom = 40.dp)
-            ) {
-                Text(text = if (expanded) "Đóng bảng câu hỏi" else "Mở bảng câu hỏi")
-            }
         }
         // Nếu expanded thì vẽ bảng chọn câu hỏi ở giữa
         if (expanded) {
@@ -216,13 +238,6 @@ fun ToeicExamScreen(
                             shape = MaterialTheme.shapes.medium
                         )
                 ) {
-                    // Nút phát âm thanh
-                    Button(
-                        onClick = { playAudio() }, // Gọi hàm playAudio khi nhấn nút
-                        modifier = Modifier.padding(bottom = 40.dp)
-                    ) {
-                        Text(text = "Phát âm thanh")
-                    }
                     // Bảng số câu hỏi
                     QuestionGrid(
                         questionCount = questionList.size,
@@ -233,7 +248,6 @@ fun ToeicExamScreen(
                             expanded = false
                         }
                     )
-
                 }
             }
         }
@@ -253,14 +267,14 @@ fun QuestionGrid(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
         items(count = questionCount) { index ->
-            val isSelected = index + 1 == currentQuestionIndex
-            val isAnswered = answers.containsKey(index + 1)
+            val isSelected = index == currentQuestionIndex
+            val isAnswered = answers.containsKey(index)
             val backgroundColor = when {
-                isSelected -> Color(0xFFD0E8FF) // câu đang chọn
-                isAnswered -> Color(0xFFC8E6C9) // câu đã làm (ví dụ xanh lá nhạt)
+                isSelected -> Color(0xFFD0E8FF)
+                isAnswered -> Color(0xFFC8E6C9)
                 else -> Color(0xFFF5F5F5) // chưa chọn
             }
             val borderColor = when {
@@ -279,12 +293,85 @@ fun QuestionGrid(
                         color = borderColor
                     )
                     .clickable {
-                        onQuestionSelected(index + 1)
+                        onQuestionSelected(index)
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "${index + 1}")
+                Text(text = "${index}")
             }
         }
+    }
+}
+
+@Composable
+fun AudioPlayer(audioUrl: String) {
+    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var currentPosition by remember { mutableStateOf(0f) }
+    var maxPosition by remember { mutableStateOf(0f) }
+
+    // Phát âm thanh
+    fun playAudio() {
+        if (!isPlaying) {
+            mediaPlayer?.release() // Giải phóng bộ nhớ của MediaPlayer trước đó nếu có
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(audioUrl)
+                setOnCompletionListener {
+                    release()
+                    mediaPlayer = null
+                    isPlaying = false
+                }
+                prepareAsync()
+                setOnPreparedListener {
+                    start() // Bắt đầu phát âm thanh
+                    maxPosition = duration.toFloat() // Lưu lại độ dài âm thanh
+                    isPlaying = true
+                }
+            }
+        } else {
+            mediaPlayer?.pause() // Tạm dừng khi đang phát
+            isPlaying = false
+        }
+    }
+
+    // Cập nhật vị trí phát
+    LaunchedEffect(isPlaying) {
+        if (isPlaying) {
+            while (isPlaying) {
+                currentPosition = mediaPlayer?.currentPosition?.toFloat() ?: 0f
+                delay(1000) // Cập nhật mỗi giây
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Nút phát/tạm dừng
+        IconButton(
+            onClick = { playAudio() }
+        ) {
+            Icon(
+                imageVector = if (isPlaying) Icons.Filled.PlayArrow else Icons.Filled.PlayArrow,
+                contentDescription = if (isPlaying) "Tạm dừng phát âm thanh" else "Phát âm thanh",
+                tint = if (isPlaying) Color.Gray else MaterialTheme.colorScheme.primary
+            )
+        }
+        // Thanh tiến trình âm thanh
+        Slider(
+            value = currentPosition,
+            onValueChange = { value ->
+                mediaPlayer?.seekTo(value.toInt()) // Di chuyển đến vị trí mới
+            },
+            valueRange = 0f..maxPosition,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        )
+
+        // Hiển thị thời gian đã qua
+        Text(text = "${(currentPosition / 1000).toInt()} giây đã qua")
     }
 }
