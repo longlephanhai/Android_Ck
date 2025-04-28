@@ -8,7 +8,9 @@ import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
+import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
@@ -77,6 +79,20 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun getToiec(access_token: String): ToeicResponse {
         return apiClient.apiService.getToiec(access_token)
+    }
+
+    override suspend fun getToeicExam(
+        access_token: String,
+        id: String
+    ): ToeicExamResponse {
+        return apiClient.apiService.getToeicExam(access_token, id)
+    }
+
+    override suspend fun getQuestionToeic(
+        access_token: String,
+        id: String
+    ): QuestionResponse {
+        return apiClient.apiService.getQuestionToeic(access_token, id)
     }
 
 

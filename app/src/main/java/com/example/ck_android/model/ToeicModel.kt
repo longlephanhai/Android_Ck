@@ -16,6 +16,25 @@ data class ToeicData(
     val audioUrl: String
 )
 
+data class ToeicExamResponse(
+    val statusCode: Int = -1,
+    val message: String = "",
+    val data: ToeicExamData = ToeicExamData(
+        _id = "",
+        name = "",
+        description = "",
+        audioUrl = ""
+    ),
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class ToeicExamData(
+    val _id: String,
+    val name: String,
+    val description: String,
+    val audioUrl: String
+)
+
 data class QuestionResponse(
     val statusCode: Int = -1,
     val message: String = "",
@@ -31,3 +50,4 @@ data class QuestionData(
     val imageUrl: String,
     val correctAnswer: String,
 )
+

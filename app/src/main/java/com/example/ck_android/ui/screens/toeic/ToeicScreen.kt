@@ -99,6 +99,8 @@ fun ToeicScreen(
                     Button(
                         onClick = {
                             val id = item._id
+                            val audioUrl=item.audioUrl
+                            navController.currentBackStackEntry?.arguments?.putString("audioUrl", audioUrl)
                             navController.navigate(Screen.ToeicExam.route.replace("{id}", id))
                         },
                         modifier = Modifier

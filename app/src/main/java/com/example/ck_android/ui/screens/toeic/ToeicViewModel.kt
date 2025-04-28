@@ -31,16 +31,17 @@ class ToeicViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
             try {
-                val response=requireNotNull(apiService).getToiec("Bearer $accessToken")
-                if(response.statusCode==200){
-                    _uiState.value=_uiState.value.copy(
+                val response = requireNotNull(apiService).getToiec("Bearer $accessToken")
+                if (response.statusCode == 200) {
+                    _uiState.value = _uiState.value.copy(
                         data = response.data,
                         status = LoadStatus.Success(response.message)
                     )
-                }else{
-                    _uiState.value=
-                        _uiState.value.copy(status = LoadStatus.Error(response.message)
-                    )
+                } else {
+                    _uiState.value =
+                        _uiState.value.copy(
+                            status = LoadStatus.Error(response.message)
+                        )
                 }
             } catch (ex: Exception) {
                 _uiState.value =
