@@ -30,6 +30,12 @@ import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
 import com.example.ck_android.ui.screens.speakAI.SpeakAIViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
+import com.example.ck_android.ui.screens.vocabulary.VocabularyByTitleScreen
+import com.example.ck_android.ui.screens.vocabulary.VocabularyByTitleViewModel
+import com.example.ck_android.ui.screens.vocabulary.VocabularyCategory
+import com.example.ck_android.ui.screens.vocabulary.VocabularyCategoryViewModel
+import com.example.ck_android.ui.screens.vocabulary.VocabularyScreen
+import com.example.ck_android.ui.screens.vocabulary.VocabularyViewModel
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -41,6 +47,9 @@ sealed class Screen(val route: String) {
     object Grammar : Screen("grammar")
     object GrammarItem : Screen("grammar_item/{slug}")
     object SpeakAi : Screen("speak_ai")
+    object Vocabulary : Screen("vocabulary")
+    object VocabularyByTitle : Screen("vocabulary_by_title/{slug}")
+    object VocabularyCategory: Screen("vocabulary_category/{slug}/{category}")
 }
 
 @Composable
@@ -104,6 +113,40 @@ fun Navigation() {
                 mainViewModel
             )
         }
+        composable(Screen.Vocabulary.route) {
+            VocabularyScreen(
+                navController,
+                vocabularyViewModel = hiltViewModel<VocabularyViewModel>(),
+                mainViewModel
+            )
+        }
+        composable(
+            Screen.VocabularyByTitle.route,
+            arguments = listOf(navArgument("slug") { type = NavType.StringType })
+        ) { backStackEntry ->
+            VocabularyByTitleScreen(
+                navController = navController,
+                vocabularyByTitleViewModel = hiltViewModel<VocabularyByTitleViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = backStackEntry.arguments?.getString("slug") ?: ""
+            )
+        }
+
+        composable(
+            Screen.VocabularyCategory.route,
+            arguments = listOf(navArgument("slug") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType })
+        ) {
+            backStackEntry ->
+            VocabularyCategory(
+                navController = navController,
+                vocabularyCategoryViewModel=hiltViewModel<VocabularyCategoryViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = backStackEntry.arguments?.getString("slug") ?: "",
+                category = backStackEntry.arguments?.getString("category") ?: ""
+            )
+        }
+
         composable(Screen.Grammar.route) {
             GrammarScreen(
                 navController,

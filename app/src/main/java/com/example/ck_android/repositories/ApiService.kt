@@ -9,6 +9,9 @@ import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.VocabularyByTitleResponse
+import com.example.ck_android.model.VocabularyCategoryResponse
+import com.example.ck_android.model.VocabularyResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -53,4 +56,21 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body chatRequest: ChatRequest
     ): ChatResponse
+
+    // api vocabulary
+    @GET("vocabulary/titles")
+    suspend fun getVocabularyTitles(@Header("Authorization") access_token: String): VocabularyResponse
+
+    @GET("vocabulary/{slug}")
+    suspend fun getVocabularyByTitle(
+        @Header("Authorization") access_token: String,
+        @Path("slug") slug: String
+    ): VocabularyByTitleResponse
+
+    @GET("vocabulary/{slug}/{category}")
+    suspend fun getVocabularyCategory(
+        @Header("Authorization") access_token: String,
+        @Path("slug") slug: String,
+        @Path("category") category: String
+    ): VocabularyCategoryResponse
 }
