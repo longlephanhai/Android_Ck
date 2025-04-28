@@ -1,5 +1,6 @@
 package com.example.ck_android.ui.screens.vocabulary
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +34,7 @@ import coil.compose.AsyncImage
 import com.example.ck_android.MainViewModel
 import com.example.ck_android.model.VocabularyCategoryItemData
 import com.example.ck_android.R
+import java.util.Locale
 
 
 @Composable
@@ -52,6 +56,28 @@ fun VocabularyCategory(
         )
     }
 
+    val context = LocalContext.current
+    var textToSpeech by remember {
+        mutableStateOf<TextToSpeech?>(null)
+    }
+
+    // Khởi tạo TextToSpeech khi Composable được gọi
+    LaunchedEffect(Unit) {
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.US  // Hoặc Locale("en", "US")
+            }
+        }
+    }
+
+    // Hủy TextToSpeech khi Composable bị dispose
+    DisposableEffect(Unit) {
+        onDispose {
+            textToSpeech?.stop()
+            textToSpeech?.shutdown()
+        }
+    }
+
     val vocabularyList = state.value.data
 
     if (vocabularyList.isNotEmpty()) {
@@ -63,7 +89,14 @@ fun VocabularyCategory(
             // Full-screen vocabulary card
             VocabularyCardFull(
                 item = vocabularyList[currentIndex.value],
-                onSpeak = { textToSpeak -> /* TODO: TTS */ },
+                onSpeak = { text ->
+                    textToSpeech?.speak(
+                        text,
+                        TextToSpeech.QUEUE_FLUSH,
+                        null,
+                        null
+                    )
+                },
                 onNext = {
                     if (currentIndex.value < vocabularyList.size - 1) {
                         currentIndex.value++
@@ -125,7 +158,7 @@ fun VocabularyCardFull(
                 .padding(32.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // Navigation arrows (only visible when needed)
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -162,14 +195,14 @@ fun VocabularyCardFull(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 // Image (if available)
-                    AsyncImage(
-                        model = item.img,
-                        contentDescription = "Vocabulary image",
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(RoundedCornerShape(16.dp)),
-                        contentScale = ContentScale.Crop
-                    )
+                AsyncImage(
+                    model = item.img,
+                    contentDescription = "Vocabulary image",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally

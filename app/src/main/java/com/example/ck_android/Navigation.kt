@@ -30,6 +30,10 @@ import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
 import com.example.ck_android.ui.screens.speakAI.SpeakAIViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
+import com.example.ck_android.ui.screens.toeic.ToeicExamScreen
+import com.example.ck_android.ui.screens.toeic.ToeicExamViewModel
+import com.example.ck_android.ui.screens.toeic.ToeicScreen
+import com.example.ck_android.ui.screens.toeic.ToeicViewModel
 import com.example.ck_android.ui.screens.vocabulary.VocabularyByTitleScreen
 import com.example.ck_android.ui.screens.vocabulary.VocabularyByTitleViewModel
 import com.example.ck_android.ui.screens.vocabulary.VocabularyCategory
@@ -49,7 +53,9 @@ sealed class Screen(val route: String) {
     object SpeakAi : Screen("speak_ai")
     object Vocabulary : Screen("vocabulary")
     object VocabularyByTitle : Screen("vocabulary_by_title/{slug}")
-    object VocabularyCategory: Screen("vocabulary_category/{slug}/{category}")
+    object VocabularyCategory : Screen("vocabulary_category/{slug}/{category}")
+    object Toeic : Screen("toeic")
+    object ToeicExam : Screen("toeic/{id}")
 }
 
 @Composable
@@ -134,13 +140,13 @@ fun Navigation() {
 
         composable(
             Screen.VocabularyCategory.route,
-            arguments = listOf(navArgument("slug") { type = NavType.StringType },
+            arguments = listOf(
+                navArgument("slug") { type = NavType.StringType },
                 navArgument("category") { type = NavType.StringType })
-        ) {
-            backStackEntry ->
+        ) { backStackEntry ->
             VocabularyCategory(
                 navController = navController,
-                vocabularyCategoryViewModel=hiltViewModel<VocabularyCategoryViewModel>(),
+                vocabularyCategoryViewModel = hiltViewModel<VocabularyCategoryViewModel>(),
                 mainViewModel = mainViewModel,
                 slug = backStackEntry.arguments?.getString("slug") ?: "",
                 category = backStackEntry.arguments?.getString("category") ?: ""
@@ -170,6 +176,24 @@ fun Navigation() {
                 navController = navController,
                 speakAIViewModel = hiltViewModel<SpeakAIViewModel>(),
                 mainViewModel = mainViewModel
+            )
+        }
+        composable(Screen.Toeic.route) {
+            ToeicScreen(
+                navController = navController,
+                toeicViewModel = hiltViewModel<ToeicViewModel>(),
+                mainViewModel = mainViewModel
+            )
+        }
+        composable(
+            Screen.ToeicExam.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            ToeicExamScreen(
+                navController = navController,
+                toeicExamViewModel = hiltViewModel<ToeicExamViewModel>(),
+                mainViewModel = mainViewModel,
+                id = backStackEntry.arguments?.getString("id") ?: ""
             )
         }
     }

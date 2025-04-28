@@ -9,6 +9,7 @@ import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.model.VocabularyResponse
@@ -73,4 +74,8 @@ interface ApiService {
         @Path("slug") slug: String,
         @Path("category") category: String
     ): VocabularyCategoryResponse
+
+    // api toeic
+    @GET("exam")
+    suspend fun getToiec(@Header("Authorization") access_token: String): ToeicResponse
 }

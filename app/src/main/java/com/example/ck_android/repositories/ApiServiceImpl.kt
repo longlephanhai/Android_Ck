@@ -9,6 +9,7 @@ import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.model.VocabularyResponse
@@ -72,6 +73,10 @@ class ApiServiceImpl @Inject constructor(
         category: String
     ): VocabularyCategoryResponse {
         return apiClient.apiService.getVocabularyCategory(access_token, slug, category)
+    }
+
+    override suspend fun getToiec(access_token: String): ToeicResponse {
+        return apiClient.apiService.getToiec(access_token)
     }
 
 
