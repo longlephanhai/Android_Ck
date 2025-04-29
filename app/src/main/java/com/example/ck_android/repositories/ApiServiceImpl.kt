@@ -10,6 +10,8 @@ import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ScoreRequest
+import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
@@ -93,6 +95,13 @@ class ApiServiceImpl @Inject constructor(
         id: String
     ): QuestionResponse {
         return apiClient.apiService.getQuestionToeic(access_token, id)
+    }
+
+    override suspend fun postScore(
+        access_token: String,
+        scoreRequest: ScoreRequest
+    ): ScoreResponse {
+        return apiClient.apiService.postScore(access_token, scoreRequest)
     }
 
 

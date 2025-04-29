@@ -59,5 +59,5 @@ data class CheckCodeData(
 data class User(
     val name: String,
     val email: String,
-    val _id: String,
+    val id: String,
 )

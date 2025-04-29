@@ -16,6 +16,9 @@ class DataStoreManager @Inject constructor(
 ) {
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        private val USER_ID_KEY = stringPreferencesKey("user_id")
+        private val USER_NAME_KEY = stringPreferencesKey("user_name")
+        private val USER_EMAIL_KEY = stringPreferencesKey("user_email")
     }
 
     // Lưu access_token
@@ -32,6 +35,26 @@ class DataStoreManager @Inject constructor(
         }
     }
 
+    // Lưu thông tin người dùng
+    suspend fun saveUser(_id: String, name: String, email: String) {
+        context.dataStore.edit { prefs ->
+            prefs[USER_ID_KEY] = _id
+            prefs[USER_NAME_KEY] = name
+            prefs[USER_EMAIL_KEY] = email
+        }
+    }
+
+    // Lấy thông tin người dùng
+    fun getUser(): Flow<Triple<String?, String?, String?>> {
+        return context.dataStore.data.map { prefs ->
+            Triple(
+                prefs[USER_ID_KEY],
+                prefs[USER_NAME_KEY],
+                prefs[USER_EMAIL_KEY]
+            )
+        }
+    }
+
     // Xóa access_token khi đăng xuất
     suspend fun clearAccessToken() {
         context.dataStore.edit { prefs ->
@@ -39,3 +62,5 @@ class DataStoreManager @Inject constructor(
         }
     }
 }
+
+

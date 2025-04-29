@@ -1,9 +1,12 @@
 package com.example.ck_android.ui.screens.toeic
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ck_android.common.enum.LoadStatus
 import com.example.ck_android.model.QuestionResponse
+import com.example.ck_android.model.ScoreRequest
+import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.repositories.ApiService
 import com.example.ck_android.repositories.DataStoreManager
@@ -26,6 +29,10 @@ class ToeicExamViewModel @Inject constructor(
 
     val _toeicExam = MutableStateFlow(ToeicExamResponse())
     val toeicExam = _toeicExam.asStateFlow()
+
+    val _scoreExam = MutableStateFlow(ScoreResponse())
+    val scoreExam = _scoreExam.asStateFlow()
+
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -74,6 +81,45 @@ class ToeicExamViewModel @Inject constructor(
             } catch (ex: Exception) {
                 _question.value =
                     _question.value.copy(status = LoadStatus.Error(ex.message.toString()))
+            }
+        }
+    }
+
+    fun postScoreToeic(
+        score: Int,
+        examId: String,
+        correctAnswers: String,
+        incorrectAnswers: String
+    ) {
+        viewModelScope.launch {
+            _scoreExam.value = _scoreExam.value.copy(status = LoadStatus.Loading())
+            try {
+                val (userId, _, _) = dataStoreManager.getUser().first()
+
+                val dataRequest = ScoreRequest(
+                    score = score,
+                    userId = userId.toString(),
+                    examId = examId,
+                    correctAnswers = correctAnswers,
+                    incorrectAnswers = incorrectAnswers
+                )
+                val accessToken = requireNotNull(dataStoreManager).getAccessToken().first()
+                val response =
+                    requireNotNull(apiService).postScore("Bearer $accessToken", dataRequest)
+                if (response.statusCode == 201) {
+                    _scoreExam.value = _scoreExam.value.copy(
+                        status = LoadStatus.Success(response.message)
+                    )
+                } else {
+                    _scoreExam.value =
+                        _scoreExam.value.copy(
+                            status = LoadStatus.Error(response.message)
+                        )
+                }
+            } catch (ex: Exception) {
+                _scoreExam.value =
+                    _scoreExam.value.copy(status = LoadStatus.Error(ex.message.toString()))
+
             }
         }
     }

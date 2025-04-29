@@ -42,6 +42,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    // Hàm lưu người dùng
+    fun saveUser(id: String, name: String, email: String) {
+        viewModelScope.launch {
+            dataStoreManager.saveUser(id, name, email)
+        }
+    }
+
     // Hàm lấy access_token
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -62,7 +69,13 @@ class LoginViewModel @Inject constructor(
                     LoginRequest(email = _uiState.value.email, password = _uiState.value.password)
                 val response = requireNotNull(apiService).login(loginRequest)
                 if (response.statusCode == 201) {
+                    // CHỜ lưu token và user info
                     saveToken(response.data.access_token)
+                    saveUser(
+                        response.data.user.id,
+                        response.data.user.name,
+                        response.data.user.email
+                    )
                     _uiState.value =
                         _uiState.value.copy(status = LoadStatus.Success(response.message))
                     Log.d("Response Success", "Success: $response")
@@ -78,4 +91,5 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
 }

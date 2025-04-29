@@ -129,24 +129,41 @@ fun ToeicExamScreen(
                     onClick = {
                         val correctAnswers = questionList.map { it.correctAnswer }
                         val userAnswers = answers
-                        val totalQuestions = questionList.size
                         var correctCount = 0
                         for (i in correctAnswers.indices) {
                             if (correctAnswers[i] == userAnswers[i]) {
                                 correctCount++;
                             }
                         }
+                        val correctAnswersCount = answers.size
+                        val incorrectAnswersCount = 200 - correctCount
                         val score = (correctCount * 5).toInt()
-                        navController.currentBackStackEntry?.arguments?.putString("score", score.toString())
-                        navController.currentBackStackEntry?.arguments?.putString("correctAnswers", correctAnswers.toString())
-                        navController.currentBackStackEntry?.arguments?.putString("userAnswers", userAnswers.toString())
+                        navController.currentBackStackEntry?.arguments?.putString(
+                            "score",
+                            score.toString()
+                        )
+                        navController.currentBackStackEntry?.arguments?.putString(
+                            "correctAnswers",
+                            correctAnswers.toString()
+                        )
+                        navController.currentBackStackEntry?.arguments?.putString(
+                            "userAnswers",
+                            userAnswers.toString()
+                        )
+                        val incorrectAnswers =
+                            userAnswers.filter { it.value != correctAnswers[it.key] }
+                        toeicExamViewModel.postScoreToeic(
+                            score,
+                            id,
+                            correctAnswers = correctCount.toString(),
+                            incorrectAnswers = incorrectAnswersCount.toString()
+                        )
                         navController.navigate(Screen.ToeicResult.route.replace("{id}", id))
                     }
                 ) {
                     Text(text = "Nộp bài")
                 }
             }
-//            Spacer(modifier = Modifier.height(16.dp))
 
             // Hiển thị hình ảnh
             AsyncImage(

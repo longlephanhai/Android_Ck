@@ -16,4 +16,5 @@ class MainViewModel @Inject constructor() : ViewModel() {
     fun setError(message: String) {
         _uiState.value = _uiState.value.copy(error = message)
     }
+
 }
