@@ -51,6 +51,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ck_android.MainViewModel
+import com.example.ck_android.Screen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -126,7 +127,20 @@ fun ToeicExamScreen(
                 // Button nộp bài
                 Button(
                     onClick = {
-                        // TODO: Xử lý khi bấm nộp bài
+                        val correctAnswers = questionList.map { it.correctAnswer }
+                        val userAnswers = answers
+                        val totalQuestions = questionList.size
+                        var correctCount = 0
+                        for (i in correctAnswers.indices) {
+                            if (correctAnswers[i] == userAnswers[i]) {
+                                correctCount++;
+                            }
+                        }
+                        val score = (correctCount * 5).toInt()
+                        navController.currentBackStackEntry?.arguments?.putString("score", score.toString())
+                        navController.currentBackStackEntry?.arguments?.putString("correctAnswers", correctAnswers.toString())
+                        navController.currentBackStackEntry?.arguments?.putString("userAnswers", userAnswers.toString())
+                        navController.navigate(Screen.ToeicResult.route.replace("{id}", id))
                     }
                 ) {
                     Text(text = "Nộp bài")

@@ -32,6 +32,8 @@ import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicExamScreen
 import com.example.ck_android.ui.screens.toeic.ToeicExamViewModel
+import com.example.ck_android.ui.screens.toeic.ToeicResultScreen
+import com.example.ck_android.ui.screens.toeic.ToeicResultViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicScreen
 import com.example.ck_android.ui.screens.toeic.ToeicViewModel
 import com.example.ck_android.ui.screens.vocabulary.VocabularyByTitleScreen
@@ -56,6 +58,7 @@ sealed class Screen(val route: String) {
     object VocabularyCategory : Screen("vocabulary_category/{slug}/{category}")
     object Toeic : Screen("toeic")
     object ToeicExam : Screen("toeic/{id}")
+    object ToeicResult : Screen("toeic_result/{id}")
 }
 
 @Composable
@@ -192,6 +195,17 @@ fun Navigation() {
             ToeicExamScreen(
                 navController = navController,
                 toeicExamViewModel = hiltViewModel<ToeicExamViewModel>(),
+                mainViewModel = mainViewModel,
+                id = backStackEntry.arguments?.getString("id") ?: ""
+            )
+        }
+        composable(
+            Screen.ToeicResult.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            ToeicResultScreen(
+                navController = navController,
+                toeicResultViewModel = hiltViewModel<ToeicResultViewModel>(),
                 mainViewModel = mainViewModel,
                 id = backStackEntry.arguments?.getString("id") ?: ""
             )
