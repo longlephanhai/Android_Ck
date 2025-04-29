@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.ck_android.ui.screens.Writing.WritingScreen
+import com.example.ck_android.ui.screens.Writing.WritingViewModel
 import com.example.ck_android.ui.screens.check_code.CheckCodeScreen
 import com.example.ck_android.ui.screens.check_code.CheckCodeViewModel
 import com.example.ck_android.ui.screens.content.ContentScreen
@@ -59,6 +61,7 @@ sealed class Screen(val route: String) {
     object Toeic : Screen("toeic")
     object ToeicExam : Screen("toeic/{id}")
     object ToeicResult : Screen("toeic_result/{id}")
+    object Writing : Screen("writing")
 }
 
 @Composable
@@ -208,6 +211,13 @@ fun Navigation() {
                 toeicResultViewModel = hiltViewModel<ToeicResultViewModel>(),
                 mainViewModel = mainViewModel,
                 id = backStackEntry.arguments?.getString("id") ?: ""
+            )
+        }
+        composable(Screen.Writing.route) {
+            WritingScreen(
+                navController = navController,
+                writingViewModel = hiltViewModel<WritingViewModel>(),
+                mainViewModel = mainViewModel
             )
         }
     }
