@@ -14,6 +14,7 @@ import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
 import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
+import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
@@ -111,6 +112,10 @@ class ApiServiceImpl @Inject constructor(
         prompt: GeminiRequest
     ): GeminiResponse {
         return apiClient.apiService.postWritten(access_token, prompt)
+    }
+
+    override suspend fun getTitleWritten(access_token: String): TitleGeminiResponse {
+        return apiClient.apiService.getTitleWritten(access_token)
     }
 
 

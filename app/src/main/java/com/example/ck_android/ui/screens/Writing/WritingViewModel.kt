@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ck_android.common.enum.LoadStatus
 import com.example.ck_android.model.GeminiRequest
 import com.example.ck_android.model.GeminiResponse
+import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.repositories.ApiService
 import com.example.ck_android.repositories.DataStoreManager
 import com.example.ck_android.repositories.MainLog
@@ -24,6 +25,9 @@ class WritingViewModel @Inject constructor(
 ) : ViewModel() {
     val _uiState = MutableStateFlow(GeminiResponse())
     val uiState = _uiState.asStateFlow()
+
+    val _titleGemini = MutableStateFlow(TitleGeminiResponse())
+    val titleGemini = _titleGemini.asStateFlow()
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -51,6 +55,29 @@ class WritingViewModel @Inject constructor(
             } catch (ex: Exception) {
                 _uiState.value =
                     _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
+            }
+        }
+    }
+
+    fun getTitle(accessToken: String) {
+        viewModelScope.launch {
+            _titleGemini.value = _titleGemini.value.copy(status = LoadStatus.Loading())
+            try {
+                val response = requireNotNull(apiService).getTitleWritten("Bearer $accessToken")
+                if (response.statusCode == 200) {
+                    _titleGemini.value = _titleGemini.value.copy(
+                        data = response.data,
+                        status = LoadStatus.Success(response.message)
+                    )
+                } else {
+                    _titleGemini.value = _titleGemini.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            } catch (ex: Exception) {
+                _titleGemini.value = _titleGemini.value.copy(
+                    status = LoadStatus.Error(ex.message.toString())
+                )
             }
         }
     }

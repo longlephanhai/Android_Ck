@@ -14,6 +14,7 @@ import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
 import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
+import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
@@ -111,4 +112,9 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body prompt: GeminiRequest
     ): GeminiResponse
+
+    @GET("gemini/title")
+    suspend fun getTitleWritten(
+        @Header("Authorization") access_token: String
+    ): TitleGeminiResponse
 }
