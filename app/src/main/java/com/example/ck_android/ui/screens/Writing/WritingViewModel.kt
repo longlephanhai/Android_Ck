@@ -33,13 +33,20 @@ class WritingViewModel @Inject constructor(
         return dataStoreManager.getAccessToken().first()
     }
 
-    fun postPrompt(accessToken: String, prompt: String) {
+    fun updateTitle(title: String) {
+        _titleGemini.value = _titleGemini.value.copy(
+            data = _titleGemini.value.data.copy(title = title)
+        )
+    }
+
+    fun postPrompt(prompt: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
             try {
                 val request = GeminiRequest(
                     prompt = prompt,
                 )
+                val accessToken = dataStoreManager.getAccessToken().first()
                 val response =
                     requireNotNull(apiService).postWritten("Bearer $accessToken", request)
                 if (response.statusCode == 200) {
@@ -59,10 +66,11 @@ class WritingViewModel @Inject constructor(
         }
     }
 
-    fun getTitle(accessToken: String) {
+    fun getTitle() {
         viewModelScope.launch {
             _titleGemini.value = _titleGemini.value.copy(status = LoadStatus.Loading())
             try {
+                val accessToken = dataStoreManager.getAccessToken().first()
                 val response = requireNotNull(apiService).getTitleWritten("Bearer $accessToken")
                 if (response.statusCode == 200) {
                     _titleGemini.value = _titleGemini.value.copy(
