@@ -4,6 +4,8 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.GeminiRequest
+import com.example.ck_android.model.GeminiResponse
 import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
@@ -102,4 +104,11 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body scoreRequest: ScoreRequest
     ): ScoreResponse
+
+    // api gemini
+    @POST("gemini/prompt")
+    suspend fun postWritten(
+        @Header("Authorization") access_token: String,
+        @Body prompt: GeminiRequest
+    ): GeminiResponse
 }

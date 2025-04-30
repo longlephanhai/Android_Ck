@@ -26,7 +26,7 @@ fun ContentScreen(
         "Ngữ pháp cơ bản" to Screen.Grammar.route,
         "Từ vựng theo chủ đề" to Screen.Vocabulary.route,
         "Luyện thi Toeic online" to Screen.Toeic.route,
-//        "Luyện viết với AI",
+        "Luyện viết với AI" to Screen.Writing.route,
         "Luyện nói với AI" to Screen.SpeakAi.route
     )
 

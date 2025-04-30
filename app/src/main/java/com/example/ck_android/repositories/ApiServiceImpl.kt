@@ -4,6 +4,8 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.GeminiRequest
+import com.example.ck_android.model.GeminiResponse
 import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
@@ -102,6 +104,13 @@ class ApiServiceImpl @Inject constructor(
         scoreRequest: ScoreRequest
     ): ScoreResponse {
         return apiClient.apiService.postScore(access_token, scoreRequest)
+    }
+
+    override suspend fun postWritten(
+        access_token: String,
+        prompt: GeminiRequest
+    ): GeminiResponse {
+        return apiClient.apiService.postWritten(access_token, prompt)
     }
 
 
