@@ -65,7 +65,7 @@ fun VocabularyCategory(
     LaunchedEffect(Unit) {
         textToSpeech = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                textToSpeech?.language = Locale.US  // Hoặc Locale("en", "US")
+                textToSpeech?.language = Locale.US
             }
         }
     }

@@ -32,6 +32,8 @@ import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
 import com.example.ck_android.ui.screens.speakAI.SpeakAIViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
+import com.example.ck_android.ui.screens.test.TestScreen
+import com.example.ck_android.ui.screens.test.TestViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicExamScreen
 import com.example.ck_android.ui.screens.toeic.ToeicExamViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicResultScreen
@@ -62,6 +64,7 @@ sealed class Screen(val route: String) {
     object ToeicExam : Screen("toeic/{id}")
     object ToeicResult : Screen("toeic_result/{id}")
     object Writing : Screen("writing")
+    object Test: Screen("Test/{slug}/{category}")
 }
 
 @Composable
@@ -220,5 +223,21 @@ fun Navigation() {
                 mainViewModel = mainViewModel
             )
         }
+        composable(
+            Screen.Test.route,
+            arguments = listOf(
+                navArgument("slug") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) {
+            TestScreen(
+                navController = navController,
+                testViewModel = hiltViewModel<TestViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = it.arguments?.getString("slug") ?: "",
+                category = it.arguments?.getString("category") ?: ""
+            )
+        }
     }
 }
+

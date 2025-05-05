@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,6 +49,7 @@ fun VocabularyByTitleScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFF5F5F5)) // Màu nền dịu
             .padding(16.dp)
     ) {
         Row(
@@ -55,74 +58,89 @@ fun VocabularyByTitleScreen(
                 .padding(vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                "STT",
-                modifier = Modifier.weight(0.2f),
-                fontSize = 16.sp,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "Tiêu đề",
-                modifier = Modifier.weight(0.6f),
-                fontSize = 16.sp,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "Thao tác",
-                modifier = Modifier.weight(0.2f),
-                fontSize = 16.sp,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            Text("STT", modifier = Modifier.weight(0.2f), fontSize = 14.sp)
+            Text("Tiêu đề", modifier = Modifier.weight(0.6f), fontSize = 14.sp)
+            Text("Thao tác", modifier = Modifier.weight(0.2f), fontSize = 14.sp)
         }
 
         Divider(modifier = Modifier.padding(vertical = 8.dp), color = Color.Gray.copy(alpha = 0.3f))
-
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
             itemsIndexed(vocabularyList) { index, item ->
-                Row(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 10.dp)
-                        .background(Color.White, shape = MaterialTheme.shapes.medium)
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(vertical = 6.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
-                    Text(
-                        "${index + 1}",
-                        modifier = Modifier.weight(0.2f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        item,
-                        modifier = Modifier.weight(0.6f),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Button(
-                        onClick = {
-                            val slug=slug
-                            val category=item
-                            navController.navigate(Screen.VocabularyCategory.route.replace("{slug}", slug).replace("{category}", category))
-                        },
+                    Column(
                         modifier = Modifier
-                            .weight(0.2f)
-                            .height(40.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF6200EE),
-                            contentColor = Color.White
-                        )
+                            .background(Color.White)
+                            .padding(16.dp)
                     ) {
-                        Text("Chọn", fontSize = 14.sp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "${index + 1}",
+                                modifier = Modifier.weight(0.2f),
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                item,
+                                modifier = Modifier.weight(0.8f),
+                                fontSize = 14.sp
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                onClick = {
+                                    val category = item
+                                    navController.navigate(
+                                        Screen.VocabularyCategory.route
+                                            .replace("{slug}", slug)
+                                            .replace("{category}", category)
+                                    )
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF4CAF50),
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text("Học", fontSize = 14.sp)
+                            }
+
+                            Button(
+                                onClick = {
+                                    val category = item
+                                    navController.navigate(
+                                        Screen.Test.route
+                                            .replace("{slug}", slug)
+                                            .replace("{category}", category)
+                                    )
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF2196F3),
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text("Ôn tập", fontSize = 14.sp)
+                            }
+                        }
                     }
                 }
-
-                Divider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    color = Color.Gray.copy(alpha = 0.2f)
-                )
             }
+
         }
     }
 }
