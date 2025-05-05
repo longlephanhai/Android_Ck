@@ -14,6 +14,8 @@ import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
 import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
+import com.example.ck_android.model.TestDefineRequest
+import com.example.ck_android.model.TestDefineResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
@@ -82,6 +84,12 @@ interface ApiService {
         @Path("category") category: String
     ): VocabularyCategoryResponse
 
+    @POST("vocabulary/random")
+    suspend fun getVocabularyRandom(
+        @Header("Authorization") access_token: String,
+        @Body testDefineRequest: TestDefineRequest
+    ): TestDefineResponse
+
     // api exam
     @GET("exam")
     suspend fun getToiec(@Header("Authorization") access_token: String): ToeicResponse
@@ -117,4 +125,5 @@ interface ApiService {
     suspend fun getTitleWritten(
         @Header("Authorization") access_token: String
     ): TitleGeminiResponse
+
 }
