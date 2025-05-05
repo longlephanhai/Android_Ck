@@ -36,6 +36,8 @@ import com.example.ck_android.ui.screens.test.TestDefineScreen
 import com.example.ck_android.ui.screens.test.TestDefineViewModel
 import com.example.ck_android.ui.screens.test.TestFlashScreen
 import com.example.ck_android.ui.screens.test.TestFlashViewModel
+import com.example.ck_android.ui.screens.test.TestQuizzSCreen
+import com.example.ck_android.ui.screens.test.TestQuizzViewModel
 import com.example.ck_android.ui.screens.test.TestScreen
 import com.example.ck_android.ui.screens.test.TestViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicExamScreen
@@ -71,6 +73,7 @@ sealed class Screen(val route: String) {
     object Test : Screen("Test/{slug}/{category}")
     object TestFlashCard : Screen("TestFlashCard/{slug}/{category}")
     object TestDefine : Screen("TestDefine/{slug}/{category}")
+    object TestQuizz : Screen("TestQuizz/{slug}/{category}")
 }
 
 @Composable
@@ -269,6 +272,21 @@ fun Navigation() {
             TestDefineScreen(
                 navController = navController,
                 testDefineViewModel = hiltViewModel<TestDefineViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = it.arguments?.getString("slug") ?: "",
+                category = it.arguments?.getString("category") ?: "",
+            )
+        }
+        composable(
+            Screen.TestQuizz.route,
+            arguments = listOf(
+                navArgument("slug") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) {
+            TestQuizzSCreen(
+                navController = navController,
+                testQuizzViewModel = hiltViewModel<TestQuizzViewModel>(),
                 mainViewModel = mainViewModel,
                 slug = it.arguments?.getString("slug") ?: "",
                 category = it.arguments?.getString("category") ?: "",

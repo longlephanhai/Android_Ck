@@ -56,7 +56,7 @@ fun TestScreen(
             imageRes = R.drawable.choose_define,
             title = "Chọn định nghĩa",
             onClick = {
-//                navController.navigate("connect/$slug/$category")
+                navController.navigate("TestQuizz/$slug/$category")
             },
             modifier = Modifier.weight(0.3f)
         )
