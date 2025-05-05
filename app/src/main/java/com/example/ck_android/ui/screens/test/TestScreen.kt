@@ -38,7 +38,7 @@ fun TestScreen(
             imageRes = R.drawable.flashcard,
             title = "Ôn tập cơ bản",
             onClick = {
-//                navController.navigate("flashcard/$slug/$category")
+                navController.navigate("TestFlashCard/$slug/$category")
             },
             modifier = Modifier.weight(0.3f)
         )

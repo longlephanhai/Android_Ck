@@ -32,6 +32,8 @@ import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
 import com.example.ck_android.ui.screens.speakAI.SpeakAIViewModel
 import com.example.ck_android.ui.screens.start.StartScreen
 import com.example.ck_android.ui.screens.start.StartViewModel
+import com.example.ck_android.ui.screens.test.TestFlashScreen
+import com.example.ck_android.ui.screens.test.TestFlashViewModel
 import com.example.ck_android.ui.screens.test.TestScreen
 import com.example.ck_android.ui.screens.test.TestViewModel
 import com.example.ck_android.ui.screens.toeic.ToeicExamScreen
@@ -64,7 +66,8 @@ sealed class Screen(val route: String) {
     object ToeicExam : Screen("toeic/{id}")
     object ToeicResult : Screen("toeic_result/{id}")
     object Writing : Screen("writing")
-    object Test: Screen("Test/{slug}/{category}")
+    object Test : Screen("Test/{slug}/{category}")
+    object TestFlashCard : Screen("TestFlashCard/{slug}/{category}")
 }
 
 @Composable
@@ -236,6 +239,21 @@ fun Navigation() {
                 mainViewModel = mainViewModel,
                 slug = it.arguments?.getString("slug") ?: "",
                 category = it.arguments?.getString("category") ?: ""
+            )
+        }
+        composable(
+            Screen.TestFlashCard.route,
+            arguments = listOf(
+                navArgument("slug") { type = NavType.StringType },
+                navArgument("category") { type = NavType.StringType }
+            )
+        ) {
+            TestFlashScreen(
+                navController = navController,
+                testFlashViewModel = hiltViewModel<TestFlashViewModel>(),
+                mainViewModel = mainViewModel,
+                slug = it.arguments?.getString("slug") ?: "",
+                category = it.arguments?.getString("category") ?: "",
             )
         }
     }
