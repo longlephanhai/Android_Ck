@@ -16,6 +16,8 @@ import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.TestDefineRequest
 import com.example.ck_android.model.TestDefineResponse
+import com.example.ck_android.model.TestQuizzRequest
+import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
@@ -89,6 +91,13 @@ class ApiServiceImpl @Inject constructor(
         testDefineRequest: TestDefineRequest
     ): TestDefineResponse {
         return apiClient.apiService.getVocabularyRandom(access_token, testDefineRequest)
+    }
+
+    override suspend fun getVocabularyRandomized(
+        access_token: String,
+        testQuizzRequest: TestQuizzRequest
+    ): TestQuizzResponse {
+        return apiClient.apiService.getVocabularyRandomized(access_token, testQuizzRequest)
     }
 
     override suspend fun getToiec(access_token: String): ToeicResponse {

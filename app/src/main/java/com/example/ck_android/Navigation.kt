@@ -36,7 +36,7 @@ import com.example.ck_android.ui.screens.test.TestDefineScreen
 import com.example.ck_android.ui.screens.test.TestDefineViewModel
 import com.example.ck_android.ui.screens.test.TestFlashScreen
 import com.example.ck_android.ui.screens.test.TestFlashViewModel
-import com.example.ck_android.ui.screens.test.TestQuizzSCreen
+import com.example.ck_android.ui.screens.test.TestQuizzScreen
 import com.example.ck_android.ui.screens.test.TestQuizzViewModel
 import com.example.ck_android.ui.screens.test.TestScreen
 import com.example.ck_android.ui.screens.test.TestViewModel
@@ -284,7 +284,7 @@ fun Navigation() {
                 navArgument("category") { type = NavType.StringType }
             )
         ) {
-            TestQuizzSCreen(
+            TestQuizzScreen(
                 navController = navController,
                 testQuizzViewModel = hiltViewModel<TestQuizzViewModel>(),
                 mainViewModel = mainViewModel,

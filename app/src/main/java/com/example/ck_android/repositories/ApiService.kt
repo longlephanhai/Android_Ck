@@ -16,6 +16,8 @@ import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.TestDefineRequest
 import com.example.ck_android.model.TestDefineResponse
+import com.example.ck_android.model.TestQuizzRequest
+import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
@@ -89,6 +91,13 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body testDefineRequest: TestDefineRequest
     ): TestDefineResponse
+
+    @POST("vocabulary/randomized")
+    suspend fun getVocabularyRandomized(
+        @Header("Authorization") access_token: String,
+        @Body testQuizzRequest: TestQuizzRequest
+    ): TestQuizzResponse
+
 
     // api exam
     @GET("exam")
