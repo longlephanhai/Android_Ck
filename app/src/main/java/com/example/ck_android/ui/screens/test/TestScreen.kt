@@ -47,7 +47,7 @@ fun TestScreen(
             imageRes = R.drawable.match_define,
             title = "Nối các thẻ",
             onClick = {
-//                navController.navigate("define/$slug/$category")
+                navController.navigate("TestDefine/$slug/$category")
             },
             modifier = Modifier.weight(0.3f)
         )

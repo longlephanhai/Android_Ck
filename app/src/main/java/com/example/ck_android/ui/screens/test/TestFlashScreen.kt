@@ -74,7 +74,7 @@ fun TestFlashScreen(
         mutableStateOf<TextToSpeech?>(null)
     }
 
-    // Khởi tạo TextToSpeech khi Composable được gọi
+
     LaunchedEffect(Unit) {
         textToSpeech = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -83,7 +83,6 @@ fun TestFlashScreen(
         }
     }
 
-    // Hủy TextToSpeech khi Composable bị dispose
     DisposableEffect(Unit) {
         onDispose {
             textToSpeech?.stop()
