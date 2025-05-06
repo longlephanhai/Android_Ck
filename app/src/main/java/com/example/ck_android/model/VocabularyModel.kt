@@ -50,25 +50,3 @@ data class VocabularyCategoryItemData(
     val slug: String = ""
 )
 
-data class FavouriteResponse(
-    val statusCode: Int = -1,
-    val message: String = "",
-    val data: FavouriteData = FavouriteData(
-        userId = "",
-        vocbId = "",
-        isFavourite = false,
-        isDeleted = false
-    ),
-    val status: LoadStatus = LoadStatus.Init()
-)
-
-data class FavouriteData(
-    val userId: String,
-    val vocbId: String,
-    val isFavourite: Boolean,
-    val isDeleted: Boolean,
-)
-
-data class FavouriteRequest(
-    val vocbId: String
-)

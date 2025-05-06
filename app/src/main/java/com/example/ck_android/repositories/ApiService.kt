@@ -4,6 +4,7 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
 import com.example.ck_android.model.GeminiRequest
@@ -143,4 +144,9 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body favouriteRequest: FavouriteRequest
     ): FavouriteResponse
+
+    @GET("favourite")
+    suspend fun getFavouriteList(
+        @Header("Authorization") access_token: String
+    ): FavouriteListResponse
 }

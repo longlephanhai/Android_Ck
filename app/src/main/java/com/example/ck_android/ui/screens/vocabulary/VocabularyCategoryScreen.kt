@@ -34,6 +34,7 @@ import coil.compose.AsyncImage
 import com.example.ck_android.MainViewModel
 import com.example.ck_android.model.VocabularyCategoryItemData
 import com.example.ck_android.R
+import com.example.ck_android.model.FavouriteListData
 import java.util.Locale
 
 
@@ -50,13 +51,19 @@ fun VocabularyCategory(
         mutableStateOf(0)
     }
 
+    val favouriteList = vocabularyCategoryViewModel.favouriteList.collectAsState()
+
     LaunchedEffect(Unit) {
         vocabularyCategoryViewModel.getVocabularyCategory(
             vocabularyCategoryViewModel.getToken() ?: "",
             slug,
             category
         )
+        vocabularyCategoryViewModel.getFavouriteVocbList()
     }
+
+    val favouriteListValue = favouriteList.value.data
+
 
     val context = LocalContext.current
     var textToSpeech by remember {
@@ -110,7 +117,8 @@ fun VocabularyCategory(
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
-                vocabularyCategoryViewModel= vocabularyCategoryViewModel
+                vocabularyCategoryViewModel = vocabularyCategoryViewModel,
+                favouriteListValue = favouriteListValue
             )
 
             // Page indicator
@@ -143,9 +151,11 @@ fun VocabularyCardFull(
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     modifier: Modifier = Modifier,
-    vocabularyCategoryViewModel: VocabularyCategoryViewModel
+    vocabularyCategoryViewModel: VocabularyCategoryViewModel,
+    favouriteListValue: List<FavouriteListData>
 ) {
-    var isFavorite by remember { mutableStateOf(false) }
+    val isFavorite = favouriteListValue.any { it.vocbId._id == item._id }
+
 
     Card(
         modifier = modifier
@@ -186,12 +196,15 @@ fun VocabularyCardFull(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = if (isFavorite) R.drawable.star else R.drawable.star2),
+                        painter = painterResource(
+                            id = if (isFavorite) R.drawable.star else R.drawable.star2
+                        ),
                         contentDescription = "Favorite",
-                        tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(28.dp)
                     )
                 }
+
             }
 
             // Word with image
