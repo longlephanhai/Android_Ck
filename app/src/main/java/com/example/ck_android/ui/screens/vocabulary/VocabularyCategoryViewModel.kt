@@ -3,6 +3,8 @@ package com.example.ck_android.ui.screens.vocabulary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ck_android.common.enum.LoadStatus
+import com.example.ck_android.model.FavouriteRequest
+import com.example.ck_android.model.FavouriteResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.repositories.ApiService
 import com.example.ck_android.repositories.DataStoreManager
@@ -22,6 +24,9 @@ class VocabularyCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     val _uiState = MutableStateFlow(VocabularyCategoryResponse())
     val uiState = _uiState.asStateFlow()
+
+    val _favourite = MutableStateFlow(FavouriteResponse())
+    val favourite = _favourite.asStateFlow()
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -50,6 +55,31 @@ class VocabularyCategoryViewModel @Inject constructor(
         } catch (ex: Exception) {
             _uiState.value =
                 _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
+        }
+    }
+
+    fun postFavourite(vocbId: String) {
+        _favourite.value = _favourite.value.copy(status = LoadStatus.Loading())
+        try {
+            viewModelScope.launch {
+                val accessToken=dataStoreManager.getAccessToken().first()
+                val request = FavouriteRequest(vocbId = vocbId)
+                val response =
+                    requireNotNull(apiService).postFavouriteVocb("Bearer $accessToken", request)
+                if (response.statusCode == 201) {
+                    _favourite.value = _favourite.value.copy(
+                        data = response.data,
+                        status = LoadStatus.Success(response.message)
+                    )
+                } else {
+                    _favourite.value = _favourite.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            _favourite.value =
+                _favourite.value.copy(status = LoadStatus.Error(ex.message.toString()))
         }
     }
 }

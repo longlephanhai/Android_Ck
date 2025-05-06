@@ -4,6 +4,8 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.FavouriteRequest
+import com.example.ck_android.model.FavouriteResponse
 import com.example.ck_android.model.GeminiRequest
 import com.example.ck_android.model.GeminiResponse
 import com.example.ck_android.model.GrammarItemResponse
@@ -135,4 +137,10 @@ interface ApiService {
         @Header("Authorization") access_token: String
     ): TitleGeminiResponse
 
+    // api favourite
+    @POST("favourite")
+    suspend fun postFavouriteVocb(
+        @Header("Authorization") access_token: String,
+        @Body favouriteRequest: FavouriteRequest
+    ): FavouriteResponse
 }

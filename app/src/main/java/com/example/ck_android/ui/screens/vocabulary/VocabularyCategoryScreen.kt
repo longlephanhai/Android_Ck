@@ -46,7 +46,9 @@ fun VocabularyCategory(
     category: String
 ) {
     val state = vocabularyCategoryViewModel.uiState.collectAsState()
-    val currentIndex = remember { mutableStateOf(0) }
+    val currentIndex = remember {
+        mutableStateOf(0)
+    }
 
     LaunchedEffect(Unit) {
         vocabularyCategoryViewModel.getVocabularyCategory(
@@ -107,7 +109,8 @@ fun VocabularyCategory(
                         currentIndex.value--
                     }
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                vocabularyCategoryViewModel= vocabularyCategoryViewModel
             )
 
             // Page indicator
@@ -139,7 +142,8 @@ fun VocabularyCardFull(
     onSpeak: (String) -> Unit,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    vocabularyCategoryViewModel: VocabularyCategoryViewModel
 ) {
     var isFavorite by remember { mutableStateOf(false) }
 
@@ -176,11 +180,13 @@ fun VocabularyCardFull(
                 }
 
                 IconButton(
-                    onClick = { isFavorite = !isFavorite },
+                    onClick = {
+                        vocabularyCategoryViewModel.postFavourite(item._id)
+                    },
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = if (isFavorite) R.drawable.star else R.drawable.star),
+                        painter = painterResource(id = if (isFavorite) R.drawable.star else R.drawable.star2),
                         contentDescription = "Favorite",
                         tint = if (isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         modifier = Modifier.size(28.dp)
