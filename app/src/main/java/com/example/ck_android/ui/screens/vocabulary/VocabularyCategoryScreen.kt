@@ -1,6 +1,7 @@
 package com.example.ck_android.ui.screens.vocabulary
 
 import android.speech.tts.TextToSpeech
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.ck_android.MainViewModel
@@ -59,8 +62,12 @@ fun VocabularyCategory(
             slug,
             category
         )
+    }
+
+    LaunchedEffect(favouriteList.value) {
         vocabularyCategoryViewModel.getFavouriteVocbList()
     }
+
 
     val favouriteListValue = favouriteList.value.data
 
@@ -144,6 +151,8 @@ fun VocabularyCategory(
     }
 }
 
+
+@OptIn(UnstableApi::class)
 @Composable
 fun VocabularyCardFull(
     item: VocabularyCategoryItemData,
@@ -191,7 +200,13 @@ fun VocabularyCardFull(
 
                 IconButton(
                     onClick = {
-                        vocabularyCategoryViewModel.postFavourite(item._id)
+                        if (isFavorite) {
+                            vocabularyCategoryViewModel.cancelFavouriteVocb(item._id)
+
+                        } else {
+                            vocabularyCategoryViewModel.postFavourite(item._id)
+                        }
+                        vocabularyCategoryViewModel.getFavouriteVocbList()
                     },
                     modifier = Modifier.size(48.dp)
                 ) {

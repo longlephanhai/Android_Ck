@@ -4,6 +4,7 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
@@ -30,6 +31,7 @@ import com.example.ck_android.model.VocabularyResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -149,4 +151,10 @@ interface ApiService {
     suspend fun getFavouriteList(
         @Header("Authorization") access_token: String
     ): FavouriteListResponse
+
+    @DELETE("favourite/{id}")
+    suspend fun deleteFavouriteVocb(
+        @Header("Authorization") access_token: String,
+        @Path("id") id: String
+    ): FavouriteCancelResponse
 }

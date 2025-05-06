@@ -4,6 +4,7 @@ import com.example.ck_android.model.ChatRequest
 import com.example.ck_android.model.ChatResponse
 import com.example.ck_android.model.CheckCodeRequest
 import com.example.ck_android.model.CheckCodeResponse
+import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
@@ -148,6 +149,13 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun getFavouriteList(access_token: String): FavouriteListResponse {
         return apiClient.apiService.getFavouriteList(access_token)
+    }
+
+    override suspend fun deleteFavouriteVocb(
+        access_token: String,
+        id: String
+    ): FavouriteCancelResponse {
+        return apiClient.apiService.deleteFavouriteVocb(access_token, id)
     }
 
 

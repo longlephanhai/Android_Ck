@@ -1,8 +1,10 @@
 package com.example.ck_android.ui.screens.vocabulary
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ck_android.common.enum.LoadStatus
+import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
@@ -28,6 +30,9 @@ class VocabularyCategoryViewModel @Inject constructor(
 
     val _favourite = MutableStateFlow(FavouriteResponse())
     val favourite = _favourite.asStateFlow()
+
+    val _cancelFavourite = MutableStateFlow(FavouriteCancelResponse())
+    val cancelFavourite = _cancelFavourite.asStateFlow()
 
     val _favouriteList = MutableStateFlow(FavouriteListResponse())
     val favouriteList = _favouriteList.asStateFlow()
@@ -75,6 +80,7 @@ class VocabularyCategoryViewModel @Inject constructor(
                         data = response.data,
                         status = LoadStatus.Success(response.message)
                     )
+                    getFavouriteVocbList()
                 } else {
                     _favourite.value = _favourite.value.copy(
                         status = LoadStatus.Error(response.message)
@@ -93,11 +99,12 @@ class VocabularyCategoryViewModel @Inject constructor(
             viewModelScope.launch {
                 val accessToken = dataStoreManager.getAccessToken().first()
                 val response = requireNotNull(apiService).getFavouriteList("Bearer $accessToken")
-                if (response.statusCode == 201) {
+                if (response.statusCode == 200) {
                     _favouriteList.value = _favouriteList.value.copy(
                         data = response.data,
                         status = LoadStatus.Success(response.message)
                     )
+//                    Log.d("Debug", "Favourite list: ${response.data}")
                 } else {
                     _favouriteList.value = _favouriteList.value.copy(
                         status = LoadStatus.Error(response.message)
@@ -107,6 +114,30 @@ class VocabularyCategoryViewModel @Inject constructor(
         } catch (ex: Exception) {
             _favouriteList.value =
                 _favouriteList.value.copy(status = LoadStatus.Error(ex.message.toString()))
+        }
+    }
+
+    fun cancelFavouriteVocb(vocbId: String) {
+        _cancelFavourite.value = _cancelFavourite.value.copy(status = LoadStatus.Loading())
+        try {
+            viewModelScope.launch {
+                val accessToken = dataStoreManager.getAccessToken().first()
+                val response =
+                    requireNotNull(apiService).deleteFavouriteVocb("Bearer $accessToken", vocbId)
+                if (response.statusCode == 201) {
+                    _cancelFavourite.value = _cancelFavourite.value.copy(
+                        status = LoadStatus.Success(response.message)
+                    )
+                    getFavouriteVocbList()
+                } else {
+                    _cancelFavourite.value = _cancelFavourite.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            _cancelFavourite.value =
+                _cancelFavourite.value.copy(status = LoadStatus.Error(ex.message.toString()))
         }
     }
 }

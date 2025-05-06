@@ -48,3 +48,10 @@ data class VocbIdData(
     val title: String,
     val vocb: String,
 )
+
+data class FavouriteCancelResponse(
+    val statusCode: Int = -1,
+    val message: String = "",
+    val status: LoadStatus = LoadStatus.Init()
+)
+
