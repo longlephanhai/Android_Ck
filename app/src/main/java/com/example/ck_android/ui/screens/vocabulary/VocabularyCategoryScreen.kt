@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -168,184 +169,141 @@ fun VocabularyCardFull(
 
     Card(
         modifier = modifier
-            .padding(24.dp)
+            .padding(16.dp)
             .clip(RoundedCornerShape(32.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = Color.White
         ),
-        elevation = CardDefaults.cardElevation(12.dp)
+        elevation = CardDefaults.cardElevation(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(32.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
                     onClick = onPrevious,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color(0x22000000))
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.arrow_left),
                         contentDescription = "Previous",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
+
+
 
                 IconButton(
                     onClick = {
                         if (isFavorite) {
                             vocabularyCategoryViewModel.cancelFavouriteVocb(item._id)
-
                         } else {
                             vocabularyCategoryViewModel.postFavourite(item._id)
                         }
                         vocabularyCategoryViewModel.getFavouriteVocbList()
                     },
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFFFF8E1))
                 ) {
                     Icon(
                         painter = painterResource(
                             id = if (isFavorite) R.drawable.star else R.drawable.star2
                         ),
                         contentDescription = "Favorite",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = if (isFavorite) Color(0xFFFFD700) else Color(0xFF90A4AE),
                         modifier = Modifier.size(28.dp)
                     )
                 }
-
             }
 
-            // Word with image
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Image (if available)
+            // Word + Image
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     model = item.img,
-                    contentDescription = "Vocabulary image",
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(200.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.LightGray)
                 )
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = item.vocb,
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
+                    color = Color(0xFF0D47A1)
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = item.vocb,
-                        style = MaterialTheme.typography.displaySmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        text = item.pronounce,
+                        style = MaterialTheme.typography.headlineSmall.copy(fontStyle = FontStyle.Italic),
+                        color = Color.Gray
                     )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-
-
-                        Text(
-                            text = item.pronounce,
-                            style = MaterialTheme.typography.headlineSmall.copy(
-                                fontStyle = FontStyle.Italic,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                    IconButton(onClick = { onSpeak(item.vocb) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_speaker),
+                            contentDescription = "Pronounce",
+                            tint = Color(0xFF0D47A1),
+                            modifier = Modifier.size(28.dp)
                         )
-
-                        IconButton(
-                            onClick = { onSpeak(item.vocb) },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_speaker),
-                                contentDescription = "Pronounce",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
                     }
                 }
             }
 
-            // Meaning section
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Meaning",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-                Text(
-                    text = item.meaning,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                )
+            // Meaning
+            Column {
+                Text("Meaning", fontWeight = FontWeight.SemiBold, color = Color.Gray)
+                Text(item.meaning, style = MaterialTheme.typography.bodyLarge)
             }
 
-            // Example section
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Example",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
+            // Example
+            Column {
+                Text("Example", fontWeight = FontWeight.SemiBold, color = Color.Gray)
                 Box(
-                    modifier = Modifier
+                    Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                        .padding(20.dp)
+                        .background(Color(0xFFF1F8E9))
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        text = "\"${item.example}\"",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontStyle = FontStyle.Italic,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    )
+                    Text("\"${item.example}\"", fontStyle = FontStyle.Italic)
                 }
             }
 
-            // Next button at bottom
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd
-            ) {
+            // Next
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                 IconButton(
                     onClick = onNext,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color(0x22000000))
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.arrow_right),
                         contentDescription = "Next",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         }
     }
+
 }
 
 @Composable
