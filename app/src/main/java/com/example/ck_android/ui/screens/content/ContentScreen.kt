@@ -86,7 +86,7 @@ fun ContentScreen(
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                "Hành động",
+                "Thao tác",
                 modifier = Modifier.weight(0.2f),
                 fontSize = 16.sp,
                 color = PrimaryBlue,
@@ -94,7 +94,10 @@ fun ContentScreen(
             )
         }
 
-        Divider(modifier = Modifier.padding(vertical = 8.dp), color = PrimaryBlue.copy(alpha = 0.3f))
+        Divider(
+            modifier = Modifier.padding(vertical = 8.dp),
+            color = PrimaryBlue.copy(alpha = 0.3f)
+        )
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(sampleData) { index, item ->
