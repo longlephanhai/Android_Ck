@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ck_android.MainViewModel
-
+import android.text.method.LinkMovementMethod
+import android.widget.TextView
+import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun GrammarItemScreen(
     navController: NavController,
@@ -42,7 +44,6 @@ fun GrammarItemScreen(
             .padding(32.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        // Title
         Text(
             text = state.value.data.title,
             style = MaterialTheme.typography.headlineLarge.copy(
@@ -52,18 +53,26 @@ fun GrammarItemScreen(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        // Display content with better spacing and style
-        val htmlContent = Html.fromHtml(state.value.data.content, Html.FROM_HTML_MODE_LEGACY)
-        BasicText(
-            text = htmlContent.toString(),
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
-            modifier = Modifier.padding(bottom = 24.dp)
+        AndroidView(
+            factory = { context ->
+                TextView(context).apply {
+                    textSize = 16f
+                    setTextColor(android.graphics.Color.parseColor("#333333"))
+                    setLineSpacing(1.4f, 1.4f)
+                    movementMethod = LinkMovementMethod.getInstance()
+                }
+            },
+            update = { textView ->
+                val htmlContent = state.value.data.content
+                textView.text = Html.fromHtml(htmlContent, Html.FROM_HTML_MODE_LEGACY)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 32.dp)
         )
 
-        // Spacer to give some space before the button
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
 
-        // Back Button with more styling
         Button(
             onClick = { navController.popBackStack() },
             modifier = Modifier
