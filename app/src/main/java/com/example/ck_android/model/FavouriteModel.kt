@@ -47,6 +47,11 @@ data class VocbIdData(
     val _id: String,
     val title: String,
     val vocb: String,
+    val img: String = "",
+    val meaning: String = "",
+    val type: String = "",
+    val example: String = "",
+    val pronounce: String = "",
 )
 
 data class FavouriteCancelResponse(

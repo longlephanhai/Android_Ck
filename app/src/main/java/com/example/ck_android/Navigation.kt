@@ -74,6 +74,7 @@ sealed class Screen(val route: String) {
     object TestFlashCard : Screen("TestFlashCard/{slug}/{category}")
     object TestDefine : Screen("TestDefine/{slug}/{category}")
     object TestQuizz : Screen("TestQuizz/{slug}/{category}")
+    object NoteBook : Screen("NoteBook")
 }
 
 @Composable
@@ -100,7 +101,7 @@ fun Navigation() {
             HomeScreen(
                 navController,
                 homeViewModel = hiltViewModel<HomeViewModel>(),
-                mainViewModel
+                mainViewModel,
             )
         }
         composable(Screen.Login.route) {
@@ -292,6 +293,7 @@ fun Navigation() {
                 category = it.arguments?.getString("category") ?: "",
             )
         }
+
     }
 }
 
