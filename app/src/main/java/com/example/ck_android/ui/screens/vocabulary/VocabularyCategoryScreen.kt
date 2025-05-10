@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,7 +32,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
@@ -39,6 +43,7 @@ import com.example.ck_android.MainViewModel
 import com.example.ck_android.model.VocabularyCategoryItemData
 import com.example.ck_android.R
 import com.example.ck_android.model.FavouriteListData
+import com.example.ck_android.ui.screens.content.PrimaryBlue
 import java.util.Locale
 
 
@@ -126,14 +131,15 @@ fun VocabularyCategory(
                 },
                 modifier = Modifier.fillMaxSize(),
                 vocabularyCategoryViewModel = vocabularyCategoryViewModel,
-                favouriteListValue = favouriteListValue
+                favouriteListValue = favouriteListValue,
+                navController = navController
             )
 
             // Page indicator
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
+                    .padding(bottom = 48.dp)
             ) {
                 PageIndicator(
                     currentPage = currentIndex.value,
@@ -162,46 +168,39 @@ fun VocabularyCardFull(
     onPrevious: () -> Unit,
     modifier: Modifier = Modifier,
     vocabularyCategoryViewModel: VocabularyCategoryViewModel,
-    favouriteListValue: List<FavouriteListData>
+    favouriteListValue: List<FavouriteListData>,
+    navController: NavController
 ) {
     val isFavorite = favouriteListValue.any { it.vocbId._id == item._id }
-
 
     Card(
         modifier = modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(32.dp)),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Header với nút Back và Favorite
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onPrevious,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Color(0x22000000))
-                ) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.arrow_left),
-                        contentDescription = "Previous",
-                        tint = MaterialTheme.colorScheme.primary
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = PrimaryBlue
                     )
                 }
-
-
 
                 IconButton(
                     onClick = {
@@ -228,7 +227,7 @@ fun VocabularyCardFull(
                 }
             }
 
-            // Word + Image
+            // Ảnh + từ + phiên âm + loa
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     model = item.img,
@@ -248,7 +247,10 @@ fun VocabularyCardFull(
                     color = Color(0xFF0D47A1)
                 )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         text = item.pronounce,
                         style = MaterialTheme.typography.headlineSmall.copy(fontStyle = FontStyle.Italic),
@@ -265,28 +267,57 @@ fun VocabularyCardFull(
                 }
             }
 
-            // Meaning
-            Column {
+            // Nghĩa
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Meaning", fontWeight = FontWeight.SemiBold, color = Color.Gray)
-                Text(item.meaning, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = item.meaning,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    textAlign = TextAlign.Center
+                )
             }
 
-            // Example
-            Column {
+            // Ví dụ
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Example", fontWeight = FontWeight.SemiBold, color = Color.Gray)
                 Box(
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
                         .background(Color(0xFFF1F8E9))
                         .padding(16.dp)
                 ) {
-                    Text("\"${item.example}\"", fontStyle = FontStyle.Italic)
+                    Text(
+                        text = "\"${item.example}\"",
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
 
-            // Next
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            // Nút chuyển trang
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(
+                    onClick = onPrevious,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color(0x22000000))
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_left),
+                        contentDescription = "Previous",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
                 IconButton(
                     onClick = onNext,
                     modifier = Modifier
@@ -303,8 +334,8 @@ fun VocabularyCardFull(
             }
         }
     }
-
 }
+
 
 @Composable
 fun PageIndicator(

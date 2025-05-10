@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -34,19 +35,16 @@ fun SpeakAIScreen(
     val aiText by speakAIViewModel.aiResponse.collectAsState()
     val audio by speakAIViewModel.audio.collectAsState()
 
-    // Speech Recognition
     val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
     val speechIntent = remember {
         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
-            putExtra(RecognizerIntent.EXTRA_PROMPT, "Nói gì đó...")
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         }
     }
 
-    // Permission handling
     val audioPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -54,38 +52,86 @@ fun SpeakAIScreen(
             startListening(speechRecognizer, speechIntent, speakAIViewModel)
         } else {
             Log.e("Permission", "Microphone permission denied")
-            // Show error to user
         }
     }
 
-    // Audio playback effect
     LaunchedEffect(audio) {
         audio?.let { playAudioFromBytes(context, it) }
     }
 
-    // Clean up on dispose
     DisposableEffect(Unit) {
         onDispose {
             speechRecognizer.destroy()
         }
     }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "AI: $aiText", style = MaterialTheme.typography.bodyLarge)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(48.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Text(
+            text = "💬 Trò chuyện với AI",
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Bạn: $userText", style = MaterialTheme.typography.bodyLarge)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        // Hiển thị phản hồi từ AI
+        if (aiText.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+                shape = MaterialTheme.shapes.medium,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("🤖 AI:", color = Color(0xFF0D47A1), style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(aiText, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
 
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        // Hiển thị nội dung người dùng
+        if (userText.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFD1C4E9)),
+                shape = MaterialTheme.shapes.medium,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("🧑 Bạn:", color = Color(0xFF4A148C), style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(userText, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        // Nút bắt đầu cuộc trò chuyện
         Button(
             onClick = speakAIViewModel::startConversation,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            )
         ) {
             Text("🟢 Bắt đầu trò chuyện")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Nút nói
         Button(
             onClick = {
                 if (ContextCompat.checkSelfPermission(
@@ -98,21 +144,51 @@ fun SpeakAIScreen(
                     audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1976D2),
+                contentColor = Color.White
+            )
         ) {
             Text("🎙️ Nói")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Nút gửi phản hồi cho AI
         Button(
             onClick = speakAIViewModel::sendUserReply,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF0D47A1),
+                contentColor = Color.White
+            )
         ) {
             Text("📤 Gửi cho AI")
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Nút quay lại
+        Button(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Gray,
+                contentColor = Color.White
+            )
+        ) {
+            Text("🔙 Quay lại")
+        }
     }
 }
+
 
 private fun startListening(
     speechRecognizer: SpeechRecognizer,
@@ -131,11 +207,11 @@ private fun startListening(
         }
 
         override fun onRmsChanged(rmsdB: Float) {
-            // Handle volume changes if needed
+
         }
 
         override fun onBufferReceived(buffer: ByteArray?) {
-            // Handle buffer if needed
+
         }
 
         override fun onEndOfSpeech() {

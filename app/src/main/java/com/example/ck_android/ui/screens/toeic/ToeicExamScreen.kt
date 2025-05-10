@@ -159,9 +159,26 @@ fun ToeicExamScreen(
                             incorrectAnswers = incorrectAnswersCount.toString()
                         )
                         navController.navigate(Screen.ToeicResult.route.replace("{id}", id))
-                    }
+                    },
+                    modifier = Modifier
+                        .height(48.dp)
+                        .padding(horizontal = 8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = MaterialTheme.shapes.medium,
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
-                    Text(text = "Nộp bài")
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Nộp bài",
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    Text(text = "Nộp bài", style = MaterialTheme.typography.labelLarge)
                 }
             }
 

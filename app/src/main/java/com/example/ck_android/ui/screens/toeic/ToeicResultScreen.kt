@@ -20,16 +20,14 @@ fun ToeicResultScreen(
     id: String
 ) {
     val score = navController.previousBackStackEntry?.arguments?.getString("score") ?: "0"
-    val correctAnswers =
-        navController.previousBackStackEntry?.arguments?.getString("correctAnswers") ?: "[]"
-    val userAnswers =
-        navController.previousBackStackEntry?.arguments?.getString("userAnswers") ?: "{}"
+    val correctAnswers = navController.previousBackStackEntry?.arguments?.getString("correctAnswers") ?: "[]"
+    val userAnswers = navController.previousBackStackEntry?.arguments?.getString("userAnswers") ?: "{}"
 
     val correctAnswersList = correctAnswers
         .removeSurrounding("[", "]")
         .split(",")
         .map { it.trim() }
-        .drop(1)
+        .drop(1) // tránh phần tử rỗng đầu tiên nếu có
 
     val userAnswersMap = userAnswers
         .removeSurrounding("{", "}")
@@ -43,54 +41,102 @@ fun ToeicResultScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Kết quả bài thi",
+            text = "🎯 Kết quả bài thi TOEIC",
             style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Text(
-            text = "Điểm của bạn: $score",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        Text(
-            text = "Chi tiết đáp án:",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        correctAnswersList.forEachIndexed { index, correct ->
-            val questionNumber = index + 1
-            val user = userAnswersMap[questionNumber] ?: ""
-            val isCorrect = correct == user
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            elevation = CardDefaults.cardElevation(6.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Câu $questionNumber: Chọn $user",
-                    style = MaterialTheme.typography.bodyLarge
+                    text = "Điểm của bạn",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = if (isCorrect) "✔ Đúng" else "❌ Sai (Đáp án: $correct)",
-                    color = if (isCorrect) Color(0xFF4CAF50) else Color.Red
+                    text = "$score điểm",
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { navController.popBackStack() }) {
-            Text(text = "Quay lại")
+        Text(
+            text = "📘 Chi tiết đáp án:",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Column {
+            correctAnswersList.forEachIndexed { index, correct ->
+                val questionNumber = index + 1
+                val user = userAnswersMap[questionNumber] ?: ""
+                val isCorrect = correct == user
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isCorrect) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
+                    ),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = "Câu $questionNumber",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = "Bạn chọn: $user",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                        Text(
+                            text = if (isCorrect) "✔ Đúng" else "❌ Sai\nĐáp án: $correct",
+                            color = if (isCorrect) Color(0xFF388E3C) else Color.Red,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2196F3),
+                contentColor = Color.White
+            ),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(text = "🔙 Quay lại", style = MaterialTheme.typography.titleMedium)
         }
     }
 }
+
