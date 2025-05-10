@@ -25,6 +25,7 @@ import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
+import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.model.VocabularyResponse
@@ -47,7 +48,7 @@ interface ApiService {
     @Multipart
     @POST("auth/register")
     suspend fun register(
-        @Part avatar: MultipartBody.Part?, // Avatar là phần upload file
+        @Part avatar: MultipartBody.Part?,
         @Part("name") name: RequestBody,
         @Part("email") email: RequestBody,
         @Part("password") password: RequestBody,
@@ -56,6 +57,9 @@ interface ApiService {
 
     @POST("auth/check-code")
     suspend fun checkCode(@Body checkCodeRequest: CheckCodeRequest): CheckCodeResponse
+
+    @GET("auth/profile")
+    suspend fun getProfile(@Header("Authorization") access_token: String): UserProfileResponse
 
     // api grammar
     @GET("grammars")

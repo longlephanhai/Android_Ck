@@ -25,6 +25,7 @@ import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
+import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.model.VocabularyResponse
@@ -51,6 +52,10 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun checkCode(checkCodeRequest: CheckCodeRequest): CheckCodeResponse {
         return apiClient.apiService.checkCode(checkCodeRequest)
+    }
+
+    override suspend fun getProfile(access_token: String): UserProfileResponse {
+        return apiClient.apiService.getProfile(access_token)
     }
 
     override suspend fun getGrammars(accessToken: String): GrammarResponse {

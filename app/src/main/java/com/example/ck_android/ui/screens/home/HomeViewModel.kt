@@ -7,6 +7,7 @@ import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
+import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.repositories.ApiService
 import com.example.ck_android.repositories.DataStoreManager
@@ -36,6 +37,9 @@ class HomeViewModel @Inject constructor(
 
     val _favouriteList = MutableStateFlow(FavouriteListResponse())
     val favouriteList = _favouriteList.asStateFlow()
+
+    val _profileState = MutableStateFlow(UserProfileResponse())
+    val profileState = _profileState.asStateFlow()
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -140,4 +144,28 @@ class HomeViewModel @Inject constructor(
                 _cancelFavourite.value.copy(status = LoadStatus.Error(ex.message.toString()))
         }
     }
+
+    fun getProfile() {
+        _profileState.value = _profileState.value.copy(status = LoadStatus.Loading())
+        try {
+            viewModelScope.launch {
+                val accessToken = dataStoreManager.getAccessToken().first()
+                val response = requireNotNull(apiService).getProfile("Bearer $accessToken")
+                if (response.statusCode == 200) {
+                    _profileState.value = _profileState.value.copy(
+                        data = response.data,
+                        status = LoadStatus.Success(response.message)
+                    )
+                } else {
+                    _profileState.value = _profileState.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            _profileState.value =
+                _profileState.value.copy(status = LoadStatus.Error(ex.message.toString()))
+        }
+    }
+
 }

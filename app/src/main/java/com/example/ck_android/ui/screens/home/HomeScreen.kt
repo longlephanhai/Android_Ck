@@ -144,153 +144,16 @@ fun HomeScreen(
                     homeViewModel = homeViewModel
                 )
             } else if (currentRoute.value == "profile") {
-                ProfileScreen(navController)
+                ProfileScreen(
+                    navController=navController,
+                    homeViewModel = homeViewModel
+                )
             } else if (currentRoute.value == "history") {
                 HistoryScreen(navController)
             }
         }
     }
 }
-
-@Composable
-fun NoteBookScreen(
-    navController: NavController,
-    homeViewModel: HomeViewModel,
-) {
-    val uiState = homeViewModel.favouriteList.collectAsState()
-
-    LaunchedEffect(Unit) {
-        homeViewModel.getFavouriteVocbList()
-    }
-
-    val status = uiState.value.status
-    val favouriteList = uiState.value.data
-
-    when (status) {
-        is LoadStatus.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-        is LoadStatus.Success -> {
-            LazyColumn(modifier = Modifier.padding(16.dp)) {
-                items(favouriteList.size) { index ->
-                    VocabularyCard(item = favouriteList[index].vocbId) {
-                        homeViewModel.cancelFavouriteVocb(favouriteList[index].vocbId._id)
-                    }
-                }
-            }
-
-        }
-        else -> {}
-    }
-}
-
-@Composable
-fun VocabularyCard(
-    item: VocbIdData,
-    onRemoveFavourite: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = {
-
-                    },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_speaker),
-                        contentDescription = "Pronounce",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "${item.vocb} ${item.pronounce}",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "${convertType(item.type)} - ${item.meaning}",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-
-
-                IconButton(
-                    onClick = {
-//                        if (isFavorite) {
-//                            vocabularyCategoryViewModel.cancelFavouriteVocb(item._id)
-//
-//                        } else {
-//                            vocabularyCategoryViewModel.postFavourite(item._id)
-//                        }
-//                        vocabularyCategoryViewModel.getFavouriteVocbList()
-                    },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.star ),
-                        contentDescription = "Favorite",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
-            }
-
-            if (item.example.isNotBlank()) {
-                Text(
-                    text = "📘 Ví dụ: ${item.example}",
-                    modifier = Modifier.padding(top = 8.dp),
-                    fontStyle = FontStyle.Italic
-                )
-            }
-
-            if (item.img.isNotBlank()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                AsyncImage(
-                    model = item.img,
-                    contentDescription = "Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                )
-            }
-        }
-    }
-}
-
-fun convertType(type: String): String {
-    return when (type) {
-        "noun" -> "(n)"
-        "verb" -> "(v)"
-        "adjective" -> "(adj)"
-        "adverb" -> "(adv)"
-        "preposition" -> "(prep)"
-        "conjunction" -> "(conj)"
-        "interjection" -> "(interj)"
-        "pronoun" -> "(pron)"
-        "numeral" -> "(num)"
-        else -> ""
-    }
-}
-
 
 
 
@@ -356,10 +219,7 @@ fun MainScreen(navController: NavController) {
 }
 
 
-@Composable
-fun ProfileScreen(navController: NavController) {
-    Text(text = "ProfileScreen")
-}
+
 
 @Composable
 fun HistoryScreen(navController: NavController) {

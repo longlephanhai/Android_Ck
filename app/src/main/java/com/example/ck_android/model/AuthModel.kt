@@ -26,7 +26,7 @@ data class RegisterRequest(
     val name: String = "",
     val password: String = "",
     val phone: String = "",
-    val _id:String="",
+    val _id: String = "",
     val status: LoadStatus = LoadStatus.Init()
 )
 
@@ -41,8 +41,8 @@ data class RegisterData(
 )
 
 data class CheckCodeRequest(
-    val _id: String="",
-    val code: String="",
+    val _id: String = "",
+    val code: String = "",
     val status: LoadStatus = LoadStatus.Init()
 )
 
@@ -61,3 +61,33 @@ data class User(
     val email: String,
     val id: String,
 )
+
+data class UserProfileResponse(
+    val statusCode: Int = -1,
+    val message: String = "",
+    val data: UserProfileData = UserProfileData(
+        _id = "",
+        email = "",
+        name = "",
+        phone = "",
+        avatar = ""
+    ),
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class UserProfileData(
+    val _id: String,
+    val email: String,
+    val name: String,
+    val phone: String,
+    val avatar: String
+)
+
+data class UpdateUserProfileRequest(
+    var avatar: Uri? = null,
+    val email: String = "",
+    val name: String = "",
+    val phone: String = "",
+    val _id: String = "",
+)
+
