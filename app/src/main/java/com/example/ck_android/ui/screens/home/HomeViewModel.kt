@@ -7,6 +7,8 @@ import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
+import com.example.ck_android.model.UpdateUserProfileRequest
+import com.example.ck_android.model.UpdateUserProfileResponse
 import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
 import com.example.ck_android.repositories.ApiService
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +44,9 @@ class HomeViewModel @Inject constructor(
 
     val _profileState = MutableStateFlow(UserProfileResponse())
     val profileState = _profileState.asStateFlow()
+
+    val _profileUpdate = MutableStateFlow(UpdateUserProfileResponse())
+    val profileUpdate = _profileUpdate.asStateFlow()
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -165,6 +172,39 @@ class HomeViewModel @Inject constructor(
         } catch (ex: Exception) {
             _profileState.value =
                 _profileState.value.copy(status = LoadStatus.Error(ex.message.toString()))
+        }
+    }
+
+    fun updateProfile(id: String, name: String, email: String, phone: String) {
+        _profileUpdate.value = _profileUpdate.value.copy(status = LoadStatus.Loading())
+        try {
+            viewModelScope.launch {
+                val accessToken = dataStoreManager.getAccessToken().first()
+                val request = UpdateUserProfileRequest(
+                    avatar = null,
+                    name = name,
+                    email = email,
+                    phone = phone
+                )
+                val response = requireNotNull(apiService).updateProfileUser(
+                    "Bearer $accessToken",
+                    id,
+                    request
+                )
+                if (response.statusCode == 200) {
+                    _profileUpdate.value = _profileUpdate.value.copy(
+                        status = LoadStatus.Success(response.message)
+                    )
+                    getProfile()
+                } else {
+                    _profileUpdate.value = _profileUpdate.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            _profileUpdate.value =
+                _profileUpdate.value.copy(status = LoadStatus.Error(ex.message.toString()))
         }
     }
 

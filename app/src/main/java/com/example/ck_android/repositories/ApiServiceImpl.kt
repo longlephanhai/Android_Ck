@@ -25,6 +25,8 @@ import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
+import com.example.ck_android.model.UpdateUserProfileRequest
+import com.example.ck_android.model.UpdateUserProfileResponse
 import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
@@ -161,6 +163,14 @@ class ApiServiceImpl @Inject constructor(
         id: String
     ): FavouriteCancelResponse {
         return apiClient.apiService.deleteFavouriteVocb(access_token, id)
+    }
+
+    override suspend fun updateProfileUser(
+        access_token: String,
+        id: String,
+        updateUserProfileRequest: UpdateUserProfileRequest
+    ): UpdateUserProfileResponse {
+        return apiClient.apiService.updateProfileUser(access_token, id, updateUserProfileRequest)
     }
 
 

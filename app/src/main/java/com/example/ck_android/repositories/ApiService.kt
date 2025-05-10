@@ -25,6 +25,8 @@ import com.example.ck_android.model.TestQuizzResponse
 import com.example.ck_android.model.TitleGeminiResponse
 import com.example.ck_android.model.ToeicExamResponse
 import com.example.ck_android.model.ToeicResponse
+import com.example.ck_android.model.UpdateUserProfileRequest
+import com.example.ck_android.model.UpdateUserProfileResponse
 import com.example.ck_android.model.UserProfileResponse
 import com.example.ck_android.model.VocabularyByTitleResponse
 import com.example.ck_android.model.VocabularyCategoryResponse
@@ -36,6 +38,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -161,4 +164,12 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Path("id") id: String
     ): FavouriteCancelResponse
+
+    // api user
+    @PATCH("users/{id}")
+    suspend fun updateProfileUser(
+        @Header("Authorization") access_token: String,
+        @Path("id") id: String,
+        @Body updateUserProfileRequest: UpdateUserProfileRequest
+    ): UpdateUserProfileResponse
 }

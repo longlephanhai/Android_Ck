@@ -62,6 +62,7 @@ fun ProfileScreen(
     var name by remember { mutableStateOf(profile?.name ?: "") }
     var email by remember { mutableStateOf(profile?.email ?: "") }
     var phone by remember { mutableStateOf(profile?.phone ?: "") }
+    var id by remember { mutableStateOf(profile?._id ?: "") }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -148,7 +149,7 @@ fun ProfileScreen(
                                 .height(56.dp),
                             singleLine = true,
                             shape = RoundedCornerShape(12.dp),
-                            colors =OutlinedTextFieldDefaults.colors(
+                            colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Color(0xFF2196F3),
                                 unfocusedBorderColor = Color.Gray,
                                 focusedLabelColor = Color(0xFF2196F3),
@@ -204,9 +205,8 @@ fun ProfileScreen(
                                 // Nút Cập nhật thông tin
                                 Button(
                                     onClick = {
-                                        // Xử lý logic cập nhật (bạn sẽ thực hiện phần này sau)
                                         isEditing = false
-//            homeViewModel.updateProfile(name, email, phone)
+                                        homeViewModel.updateProfile(id, name, email, phone)
                                     },
                                     modifier = Modifier
                                         .weight(1f)

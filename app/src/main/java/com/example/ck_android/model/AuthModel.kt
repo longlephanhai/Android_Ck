@@ -83,11 +83,23 @@ data class UserProfileData(
     val avatar: String
 )
 
+data class UpdateUserProfileResponse(
+    val statusCode: Int = -1,
+    val message: String = "",
+    val data: dataUSer = dataUSer(
+        _id = ""
+    ),
+    val status: LoadStatus = LoadStatus.Init()
+)
+
+data class dataUSer(
+    val _id: String,
+)
+
 data class UpdateUserProfileRequest(
     var avatar: Uri? = null,
     val email: String = "",
     val name: String = "",
     val phone: String = "",
-    val _id: String = "",
 )
 

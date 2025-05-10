@@ -102,7 +102,7 @@ class RegisterViewModel @Inject constructor(
 
     private fun prepareFilePart(partName: String, fileUri: Uri): MultipartBody.Part {
         val file =
-            File(getRealPathFromURI(fileUri)) // Giả sử bạn có phương thức lấy đường dẫn thực từ URI
+            File(getRealPathFromURI(fileUri))
         val requestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(partName, file.name, requestBody)
     }
