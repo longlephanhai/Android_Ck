@@ -1,5 +1,6 @@
 package com.example.ck_android.ui.screens.home
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,13 +21,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +43,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.ck_android.R
 import com.example.ck_android.common.enum.LoadStatus
+import com.example.ck_android.model.FavouriteListData
 import com.example.ck_android.model.VocbIdData
+import com.example.ck_android.ui.screens.vocabulary.VocabularyCategoryViewModel
+import java.util.Locale
 
 @Composable
 fun NoteBookScreen(
@@ -52,22 +62,56 @@ fun NoteBookScreen(
     val status = uiState.value.status
     val favouriteList = uiState.value.data
 
+    val context = LocalContext.current
+    var textToSpeech by remember {
+        mutableStateOf<TextToSpeech?>(null)
+    }
+
+    // Khởi tạo TextToSpeech khi Composable được gọi
+    LaunchedEffect(Unit) {
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.US
+            }
+        }
+    }
+
+    // Hủy TextToSpeech khi Composable bị dispose
+    DisposableEffect(Unit) {
+        onDispose {
+            textToSpeech?.stop()
+            textToSpeech?.shutdown()
+        }
+    }
+
     when (status) {
         is LoadStatus.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
+
         is LoadStatus.Success -> {
             LazyColumn(modifier = Modifier.padding(16.dp)) {
                 items(favouriteList.size) { index ->
-                    VocabularyCard(item = favouriteList[index].vocbId) {
+                    VocabularyCard(
+                        item = favouriteList[index].vocbId,
+                        onSpeak = { text ->
+                            textToSpeech?.speak(
+                                text,
+                                TextToSpeech.QUEUE_FLUSH,
+                                null,
+                                null
+                            )
+                        },
+                    ) {
                         homeViewModel.cancelFavouriteVocb(favouriteList[index].vocbId._id)
                     }
                 }
             }
 
         }
+
         else -> {}
     }
 }
@@ -75,7 +119,8 @@ fun NoteBookScreen(
 @Composable
 fun VocabularyCard(
     item: VocbIdData,
-    onRemoveFavourite: () -> Unit
+    onSpeak: (String) -> Unit,
+    onRemoveFavourite: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -85,11 +130,10 @@ fun VocabularyCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick = {
-
+                        onSpeak(item.vocb)
                     },
                     modifier = Modifier.size(48.dp)
                 ) {
@@ -119,18 +163,12 @@ fun VocabularyCard(
 
                 IconButton(
                     onClick = {
-//                        if (isFavorite) {
-//                            vocabularyCategoryViewModel.cancelFavouriteVocb(item._id)
-//
-//                        } else {
-//                            vocabularyCategoryViewModel.postFavourite(item._id)
-//                        }
-//                        vocabularyCategoryViewModel.getFavouriteVocbList()
+                        onRemoveFavourite()
                     },
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.star ),
+                        painter = painterResource(R.drawable.star),
                         contentDescription = "Favorite",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(28.dp)

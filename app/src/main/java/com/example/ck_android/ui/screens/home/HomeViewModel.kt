@@ -52,57 +52,6 @@ class HomeViewModel @Inject constructor(
         return dataStoreManager.getAccessToken().first()
     }
 
-    fun getVocabularyCategory(accessToken: String, slug: String, category: String) {
-        _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
-        try {
-            viewModelScope.launch {
-                val response = requireNotNull(apiService).getVocabularyCategory(
-                    "Bearer $accessToken",
-                    slug,
-                    category
-                )
-                if (response.statusCode == 200) {
-                    _uiState.value = _uiState.value.copy(
-                        data = response.data,
-                        status = LoadStatus.Success(response.message)
-                    )
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        status = LoadStatus.Error(response.message)
-                    )
-                }
-            }
-        } catch (ex: Exception) {
-            _uiState.value =
-                _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
-        }
-    }
-
-    fun postFavourite(vocbId: String) {
-        _favourite.value = _favourite.value.copy(status = LoadStatus.Loading())
-        try {
-            viewModelScope.launch {
-                val accessToken = dataStoreManager.getAccessToken().first()
-                val request = FavouriteRequest(vocbId = vocbId)
-                val response =
-                    requireNotNull(apiService).postFavouriteVocb("Bearer $accessToken", request)
-                if (response.statusCode == 201) {
-                    _favourite.value = _favourite.value.copy(
-                        data = response.data,
-                        status = LoadStatus.Success(response.message)
-                    )
-                    getFavouriteVocbList()
-                } else {
-                    _favourite.value = _favourite.value.copy(
-                        status = LoadStatus.Error(response.message)
-                    )
-                }
-            }
-        } catch (ex: Exception) {
-            _favourite.value =
-                _favourite.value.copy(status = LoadStatus.Error(ex.message.toString()))
-        }
-    }
 
     fun getFavouriteVocbList() {
         _favouriteList.value = _favouriteList.value.copy(status = LoadStatus.Loading())
@@ -112,7 +61,7 @@ class HomeViewModel @Inject constructor(
                 val response = requireNotNull(apiService).getFavouriteList("Bearer $accessToken")
                 if (response.statusCode == 200) {
                     _favouriteList.value = _favouriteList.value.copy(
-                        data = response.data,
+                        data = response.data?.toList() ?: emptyList(),
                         status = LoadStatus.Success(response.message)
                     )
 //                    Log.d("Debug", "Favourite list: ${response.data}")
@@ -136,7 +85,8 @@ class HomeViewModel @Inject constructor(
                 val response =
                     requireNotNull(apiService).deleteFavouriteVocb("Bearer $accessToken", vocbId)
                 if (response.statusCode == 201) {
-                    _cancelFavourite.value = _cancelFavourite.value.copy(
+                    _favouriteList.value = _favouriteList.value.copy(
+                        data = _favouriteList.value.data.filterNot { it.vocbId._id == vocbId },
                         status = LoadStatus.Success(response.message)
                     )
                     getFavouriteVocbList()
