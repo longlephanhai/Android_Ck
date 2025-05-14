@@ -16,6 +16,7 @@ import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ScoreListResponse
 import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.TestDefineRequest
@@ -134,6 +135,10 @@ class ApiServiceImpl @Inject constructor(
         scoreRequest: ScoreRequest
     ): ScoreResponse {
         return apiClient.apiService.postScore(access_token, scoreRequest)
+    }
+
+    override suspend fun getScoreList(access_token: String): ScoreListResponse {
+        return apiClient.apiService.getScoreList(access_token)
     }
 
     override suspend fun postWritten(

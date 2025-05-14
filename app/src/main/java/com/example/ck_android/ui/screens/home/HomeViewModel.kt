@@ -7,6 +7,7 @@ import com.example.ck_android.model.FavouriteCancelResponse
 import com.example.ck_android.model.FavouriteListResponse
 import com.example.ck_android.model.FavouriteRequest
 import com.example.ck_android.model.FavouriteResponse
+import com.example.ck_android.model.ScoreListResponse
 import com.example.ck_android.model.UpdateUserProfileRequest
 import com.example.ck_android.model.UpdateUserProfileResponse
 import com.example.ck_android.model.UserProfileResponse
@@ -47,6 +48,9 @@ class HomeViewModel @Inject constructor(
 
     val _profileUpdate = MutableStateFlow(UpdateUserProfileResponse())
     val profileUpdate = _profileUpdate.asStateFlow()
+
+    val _scoreList = MutableStateFlow(ScoreListResponse())
+    val scoreList = _scoreList.asStateFlow()
 
     suspend fun getToken(): String? {
         return dataStoreManager.getAccessToken().first()
@@ -158,4 +162,27 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getScore() {
+        _scoreList.value = _scoreList.value.copy(status = LoadStatus.Loading())
+        try {
+            viewModelScope.launch {
+                val accessToken = dataStoreManager.getAccessToken().first()
+                val response = requireNotNull(apiService).getScoreList("Bearer $accessToken")
+                if (response.statusCode == 200) {
+                    _scoreList.value = _scoreList.value.copy(
+                        data = response.data?.toList() ?: emptyList(),
+                        status = LoadStatus.Success(response.message)
+                    )
+                } else {
+                    _scoreList.value = _scoreList.value.copy(
+                        status = LoadStatus.Error(response.message)
+                    )
+                }
+            }
+        } catch (ex: Exception) {
+            _scoreList.value =
+                _scoreList.value.copy(status = LoadStatus.Error(ex.message.toString()))
+        }
+
+    }
 }

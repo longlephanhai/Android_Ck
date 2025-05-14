@@ -149,7 +149,10 @@ fun HomeScreen(
                     homeViewModel = homeViewModel
                 )
             } else if (currentRoute.value == "history") {
-                HistoryScreen(navController)
+                HistoryScreen(
+                    navController,
+                    homeViewModel = homeViewModel
+                )
             }
         }
     }
@@ -220,8 +223,3 @@ fun MainScreen(navController: NavController) {
 
 
 
-
-@Composable
-fun HistoryScreen(navController: NavController) {
-    Text(text = "HistoryScreen")
-}

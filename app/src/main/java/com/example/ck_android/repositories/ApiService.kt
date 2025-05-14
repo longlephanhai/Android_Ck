@@ -16,6 +16,7 @@ import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
+import com.example.ck_android.model.ScoreListResponse
 import com.example.ck_android.model.ScoreRequest
 import com.example.ck_android.model.ScoreResponse
 import com.example.ck_android.model.TestDefineRequest
@@ -134,6 +135,11 @@ interface ApiService {
         @Header("Authorization") access_token: String,
         @Body scoreRequest: ScoreRequest
     ): ScoreResponse
+
+    @GET("score")
+    suspend fun getScoreList(
+        @Header("Authorization") access_token: String
+    ): ScoreListResponse
 
     // api gemini
     @POST("gemini/prompt")
