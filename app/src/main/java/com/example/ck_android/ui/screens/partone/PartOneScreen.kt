@@ -36,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ck_android.MainViewModel
-import com.example.ck_android.Screen
-import com.example.ck_android.ui.screens.content.ContentViewModel
 import com.example.ck_android.ui.screens.content.LightBlueBackground
 import com.example.ck_android.ui.screens.content.PrimaryBlue
 
@@ -142,7 +140,9 @@ fun PartOneScreen(
                         )
                         Button(
                             onClick = {
-//                                // TODO
+                                val audioUrl=item.audioUrl
+                                navController.currentBackStackEntry?.arguments?.putString("audioUrl", audioUrl)
+                                navController.navigate("part_one_item/${item._id}")
                             },
                             modifier = Modifier
                                 .weight(0.2f)

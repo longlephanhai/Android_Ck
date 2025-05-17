@@ -26,6 +26,9 @@ import com.example.ck_android.ui.screens.home.HomeScreen
 import com.example.ck_android.ui.screens.home.HomeViewModel
 import com.example.ck_android.ui.screens.login.LoginScreen
 import com.example.ck_android.ui.screens.login.LoginViewModel
+import com.example.ck_android.ui.screens.partone.PartOneItemScreen
+import com.example.ck_android.ui.screens.partone.PartOneItemViewModel
+import com.example.ck_android.ui.screens.partone.PartOneResultScreen
 import com.example.ck_android.ui.screens.partone.PartOneScreen
 import com.example.ck_android.ui.screens.partone.PartOneViewModel
 import com.example.ck_android.ui.screens.register.RegisterScreen
@@ -77,6 +80,8 @@ sealed class Screen(val route: String) {
     object TestDefine : Screen("TestDefine/{slug}/{category}")
     object TestQuizz : Screen("TestQuizz/{slug}/{category}")
     object PartOne: Screen("part_one")
+    object PartOneItem: Screen("part_one_item/{id}")
+    object PartOneResult: Screen("part_one_result/{id}")
 }
 
 @Composable
@@ -302,7 +307,29 @@ fun Navigation() {
                 mainViewModel = mainViewModel
             )
         }
-
+        composable(
+            Screen.PartOneItem.route,
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+            )
+        ) {
+            PartOneItemScreen(
+                navController = navController,
+                partOneItemViewModel = hiltViewModel<PartOneItemViewModel>(),
+                mainViewModel = mainViewModel,
+                id = it.arguments?.getString("id") ?: "",
+            )
+        }
+        composable(
+            Screen.PartOneResult.route,
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            PartOneResultScreen(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                id = backStackEntry.arguments?.getString("id") ?: ""
+            )
+        }
     }
 }
 

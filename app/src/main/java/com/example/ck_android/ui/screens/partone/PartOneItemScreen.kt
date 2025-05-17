@@ -1,4 +1,4 @@
-package com.example.ck_android.ui.screens.toeic
+package com.example.ck_android.ui.screens.partone
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -52,31 +52,34 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ck_android.MainViewModel
 import com.example.ck_android.Screen
-import com.example.ck_android.repositories.ApiClient
 import com.example.ck_android.repositories.ApiClient.ApiConfig
+import com.example.ck_android.ui.screens.content.LightBlueBackground
 import kotlinx.coroutines.delay
 
 @Composable
-fun ToeicExamScreen(
+fun PartOneItemScreen(
     navController: NavController,
-    toeicExamViewModel: ToeicExamViewModel,
+    partOneItemViewModel: PartOneItemViewModel,
     mainViewModel: MainViewModel,
     id: String
 ) {
-
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(LightBlueBackground)
+    )
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val paddingVertical = (screenHeight * 0.1f).dp
 
-    val questionData = toeicExamViewModel.question.collectAsState()
+    val questionData=partOneItemViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        toeicExamViewModel.getQuestionToeic(toeicExamViewModel.getToken() ?: "", id)
+        partOneItemViewModel.getPartOneQuestion(id)
     }
-    val questionList = questionData.value.data
+    val questionList=questionData.value.data
 
     val baseUrl= ApiConfig.BASE_BACKEND
     val audioUrl = baseUrl + navController.previousBackStackEntry?.arguments?.getString("audioUrl")
-
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var answers by remember { mutableStateOf(mutableMapOf<Int, String>()) }
@@ -137,7 +140,7 @@ fun ToeicExamScreen(
                             }
                         }
                         val correctAnswersCount = answers.size
-                        val incorrectAnswersCount = 200 - correctCount
+                        val incorrectAnswersCount = 10 - correctCount
                         val score = (correctCount * 5).toInt()
                         navController.currentBackStackEntry?.arguments?.putString(
                             "score",
@@ -153,13 +156,13 @@ fun ToeicExamScreen(
                         )
                         val incorrectAnswers =
                             userAnswers.filter { it.value != correctAnswers[it.key] }
-                        toeicExamViewModel.postScoreToeic(
-                            score,
-                            id,
-                            correctAnswers = correctCount.toString(),
-                            incorrectAnswers = incorrectAnswersCount.toString()
-                        )
-                        navController.navigate(Screen.ToeicResult.route.replace("{id}", id))
+//                        partOneItemViewModel.postScoreToeic(
+//                            score,
+//                            id,
+//                            correctAnswers = correctCount.toString(),
+//                            incorrectAnswers = incorrectAnswersCount.toString()
+//                        )
+                        navController.navigate(Screen.PartOneResult.route.replace("{id}", id))
                     },
                     modifier = Modifier
                         .height(48.dp)
@@ -346,7 +349,7 @@ fun QuestionGrid(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "${index}")
+                Text(text = "${index+1}")
             }
         }
     }
