@@ -31,6 +31,8 @@ import com.example.ck_android.ui.screens.partone.PartOneItemViewModel
 import com.example.ck_android.ui.screens.partone.PartOneResultScreen
 import com.example.ck_android.ui.screens.partone.PartOneScreen
 import com.example.ck_android.ui.screens.partone.PartOneViewModel
+import com.example.ck_android.ui.screens.parttwo.PartTwoItemScreen
+import com.example.ck_android.ui.screens.parttwo.PartTwoItemViewModel
 import com.example.ck_android.ui.screens.parttwo.PartTwoScreen
 import com.example.ck_android.ui.screens.parttwo.PartTwoViewModel
 import com.example.ck_android.ui.screens.register.RegisterScreen
@@ -81,11 +83,11 @@ sealed class Screen(val route: String) {
     object TestFlashCard : Screen("TestFlashCard/{slug}/{category}")
     object TestDefine : Screen("TestDefine/{slug}/{category}")
     object TestQuizz : Screen("TestQuizz/{slug}/{category}")
-    object PartOne: Screen("part_one")
-    object PartOneItem: Screen("part_one_item/{id}")
-    object PartOneResult: Screen("part_one_result/{id}")
-    object PartTwo: Screen("part_two")
-
+    object PartOne : Screen("part_one")
+    object PartOneItem : Screen("part_one_item/{id}")
+    object PartOneResult : Screen("part_one_result/{id}")
+    object PartTwo : Screen("part_two")
+    object PartTwoItem : Screen("part_two_item/{id}")
 }
 
 @Composable
@@ -307,7 +309,7 @@ fun Navigation() {
         composable(Screen.PartOne.route) {
             PartOneScreen(
                 navController = navController,
-                partOneViewModel =hiltViewModel<PartOneViewModel>(),
+                partOneViewModel = hiltViewModel<PartOneViewModel>(),
                 mainViewModel = mainViewModel
             )
         }
@@ -337,8 +339,21 @@ fun Navigation() {
         composable(Screen.PartTwo.route) {
             PartTwoScreen(
                 navController = navController,
-                partTwoViewModel =hiltViewModel<PartTwoViewModel>(),
+                partTwoViewModel = hiltViewModel<PartTwoViewModel>(),
                 mainViewModel = mainViewModel
+            )
+        }
+        composable(
+            Screen.PartTwoItem.route,
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+            )
+        ) {
+            PartTwoItemScreen(
+                navController = navController,
+                partTwoItemViewModel = hiltViewModel<PartTwoItemViewModel>(),
+                mainViewModel = mainViewModel,
+                id = it.arguments?.getString("id") ?: "",
             )
         }
     }

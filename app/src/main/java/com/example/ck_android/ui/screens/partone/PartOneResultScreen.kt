@@ -51,8 +51,6 @@ fun PartOneResultScreen(
             val (key, value) = it.split("=")
             key.toInt() to value
         }
-    Text(text = "Số câu đúng: ${correctAnswersList.size}")
-    Text(text = "Số câu đã trả lời: ${userAnswersMap.size}")
 
     Column(
         modifier = Modifier

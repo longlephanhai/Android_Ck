@@ -143,7 +143,7 @@ fun PartTwoScreen(
                             onClick = {
                                 val audioUrl=item.audioUrl
                                 navController.currentBackStackEntry?.arguments?.putString("audioUrl", audioUrl)
-                                navController.navigate("part_one_item/${item._id}")
+                                navController.navigate("part_two_item/${item._id}")
                             },
                             modifier = Modifier
                                 .weight(0.2f)
