@@ -31,6 +31,8 @@ import com.example.ck_android.ui.screens.partone.PartOneItemViewModel
 import com.example.ck_android.ui.screens.partone.PartOneResultScreen
 import com.example.ck_android.ui.screens.partone.PartOneScreen
 import com.example.ck_android.ui.screens.partone.PartOneViewModel
+import com.example.ck_android.ui.screens.parttwo.PartTwoScreen
+import com.example.ck_android.ui.screens.parttwo.PartTwoViewModel
 import com.example.ck_android.ui.screens.register.RegisterScreen
 import com.example.ck_android.ui.screens.register.RegisterViewModel
 import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
@@ -82,6 +84,8 @@ sealed class Screen(val route: String) {
     object PartOne: Screen("part_one")
     object PartOneItem: Screen("part_one_item/{id}")
     object PartOneResult: Screen("part_one_result/{id}")
+    object PartTwo: Screen("part_two")
+
 }
 
 @Composable
@@ -328,6 +332,13 @@ fun Navigation() {
                 navController = navController,
                 mainViewModel = mainViewModel,
                 id = backStackEntry.arguments?.getString("id") ?: ""
+            )
+        }
+        composable(Screen.PartTwo.route) {
+            PartTwoScreen(
+                navController = navController,
+                partTwoViewModel =hiltViewModel<PartTwoViewModel>(),
+                mainViewModel = mainViewModel
             )
         }
     }

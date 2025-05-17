@@ -62,7 +62,7 @@ fun PartOneResultScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "🎯 Kết quả Part 1",
+            text = "🎯 Kết quả",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 16.dp)
