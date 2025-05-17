@@ -26,6 +26,8 @@ import com.example.ck_android.ui.screens.home.HomeScreen
 import com.example.ck_android.ui.screens.home.HomeViewModel
 import com.example.ck_android.ui.screens.login.LoginScreen
 import com.example.ck_android.ui.screens.login.LoginViewModel
+import com.example.ck_android.ui.screens.partone.PartOneScreen
+import com.example.ck_android.ui.screens.partone.PartOneViewModel
 import com.example.ck_android.ui.screens.register.RegisterScreen
 import com.example.ck_android.ui.screens.register.RegisterViewModel
 import com.example.ck_android.ui.screens.speakAI.SpeakAIScreen
@@ -74,7 +76,7 @@ sealed class Screen(val route: String) {
     object TestFlashCard : Screen("TestFlashCard/{slug}/{category}")
     object TestDefine : Screen("TestDefine/{slug}/{category}")
     object TestQuizz : Screen("TestQuizz/{slug}/{category}")
-    object NoteBook : Screen("NoteBook")
+    object PartOne: Screen("part_one")
 }
 
 @Composable
@@ -291,6 +293,13 @@ fun Navigation() {
                 mainViewModel = mainViewModel,
                 slug = it.arguments?.getString("slug") ?: "",
                 category = it.arguments?.getString("category") ?: "",
+            )
+        }
+        composable(Screen.PartOne.route) {
+            PartOneScreen(
+                navController = navController,
+                partOneViewModel =hiltViewModel<PartOneViewModel>(),
+                mainViewModel = mainViewModel
             )
         }
 

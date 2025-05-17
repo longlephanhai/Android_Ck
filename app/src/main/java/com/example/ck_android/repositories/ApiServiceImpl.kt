@@ -14,6 +14,7 @@ import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
+import com.example.ck_android.model.PartOneResponse
 import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
 import com.example.ck_android.model.ScoreListResponse
@@ -176,6 +177,10 @@ class ApiServiceImpl @Inject constructor(
         updateUserProfileRequest: UpdateUserProfileRequest
     ): UpdateUserProfileResponse {
         return apiClient.apiService.updateProfileUser(access_token, id, updateUserProfileRequest)
+    }
+
+    override suspend fun getPartOneTitle(access_token: String): PartOneResponse {
+        return apiClient.apiService.getPartOneTitle(access_token)
     }
 
 

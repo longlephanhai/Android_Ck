@@ -5,11 +5,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class ApiClient @Inject constructor() {
-        private val BASE_URL = "http://10.0.2.2:8080/api/v1/"
-//    private val BASE_URL = "https://education-be-tuv3.onrender.com/api/v1/"
+    object ApiConfig {
+        const val BASE_URL = "http://10.0.2.2:8080/api/v1/"
+        // const val BASE_URL = "https://education-be-tuv3.onrender.com/api/v1/"
+    }
+
     val apiService: ApiService by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(ApiConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)

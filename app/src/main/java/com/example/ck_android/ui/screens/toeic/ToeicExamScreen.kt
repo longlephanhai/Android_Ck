@@ -52,6 +52,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.ck_android.MainViewModel
 import com.example.ck_android.Screen
+import com.example.ck_android.repositories.ApiClient
+import com.example.ck_android.repositories.ApiClient.ApiConfig
 import kotlinx.coroutines.delay
 
 @Composable
@@ -72,8 +74,7 @@ fun ToeicExamScreen(
     }
     val questionList = questionData.value.data
 
-    val baseUrl = "http://10.0.2.2:8080/"
-//    val baseUrl="https://education-be-tuv3.onrender.com/"
+    val baseUrl= ApiConfig.BASE_URL
     val audioUrl = baseUrl + navController.previousBackStackEntry?.arguments?.getString("audioUrl")
 
 

@@ -14,6 +14,7 @@ import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
+import com.example.ck_android.model.PartOneResponse
 import com.example.ck_android.model.QuestionResponse
 import com.example.ck_android.model.RegisterResponse
 import com.example.ck_android.model.ScoreListResponse
@@ -178,4 +179,10 @@ interface ApiService {
         @Path("id") id: String,
         @Body updateUserProfileRequest: UpdateUserProfileRequest
     ): UpdateUserProfileResponse
+
+    // api part one
+    @GET("partone")
+    suspend fun getPartOneTitle(
+        @Header("Authorization") access_token: String
+    ): PartOneResponse
 }
