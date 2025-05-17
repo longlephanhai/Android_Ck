@@ -2,14 +2,14 @@ package com.example.ck_android.model
 
 import com.example.ck_android.common.enum.LoadStatus
 
-data class PartTwoResponse(
+data class PartThreeResponse(
     val statusCode: Int = -1,
     val message: String = "",
-    val data: List<PartTwoData> = emptyList(),
+    val data: List<PartThreeData> = emptyList(),
     val status: LoadStatus = LoadStatus.Init()
 )
 
-data class PartTwoData(
+data class PartThreeData(
     val _id: String,
     val name: String,
     val description: String,

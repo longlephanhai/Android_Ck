@@ -31,6 +31,8 @@ import com.example.ck_android.ui.screens.partone.PartOneItemViewModel
 import com.example.ck_android.ui.screens.partone.PartOneResultScreen
 import com.example.ck_android.ui.screens.partone.PartOneScreen
 import com.example.ck_android.ui.screens.partone.PartOneViewModel
+import com.example.ck_android.ui.screens.partthree.PartThreeScreen
+import com.example.ck_android.ui.screens.partthree.PartThreeViewModel
 import com.example.ck_android.ui.screens.parttwo.PartTwoItemScreen
 import com.example.ck_android.ui.screens.parttwo.PartTwoItemViewModel
 import com.example.ck_android.ui.screens.parttwo.PartTwoScreen
@@ -88,6 +90,7 @@ sealed class Screen(val route: String) {
     object PartOneResult : Screen("part_one_result/{id}")
     object PartTwo : Screen("part_two")
     object PartTwoItem : Screen("part_two_item/{id}")
+    object PartThree : Screen("part_three")
 }
 
 @Composable
@@ -354,6 +357,13 @@ fun Navigation() {
                 partTwoItemViewModel = hiltViewModel<PartTwoItemViewModel>(),
                 mainViewModel = mainViewModel,
                 id = it.arguments?.getString("id") ?: "",
+            )
+        }
+        composable(Screen.PartThree.route) {
+            PartThreeScreen(
+                navController = navController,
+                partThreeViewModel = hiltViewModel<PartThreeViewModel>(),
+                mainViewModel = mainViewModel
             )
         }
     }

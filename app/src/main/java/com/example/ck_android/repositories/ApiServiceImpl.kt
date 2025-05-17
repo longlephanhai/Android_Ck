@@ -16,6 +16,7 @@ import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.PartOneQuestionResponse
 import com.example.ck_android.model.PartOneResponse
+import com.example.ck_android.model.PartThreeResponse
 import com.example.ck_android.model.PartTwoQuestionResponse
 import com.example.ck_android.model.PartTwoResponse
 import com.example.ck_android.model.QuestionResponse
@@ -202,6 +203,10 @@ class ApiServiceImpl @Inject constructor(
         id: String
     ): PartTwoQuestionResponse {
         return apiClient.apiService.getQuestionPartTwo(access_token, id)
+    }
+
+    override suspend fun getPartThreeTitle(access_token: String): PartThreeResponse {
+        return apiClient.apiService.getPartThreeTitle(access_token)
     }
 
 
