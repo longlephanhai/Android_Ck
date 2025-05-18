@@ -1,4 +1,4 @@
-package com.example.ck_android.ui.screens.partsix
+package com.example.ck_android.ui.screens.partseven
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,11 +47,12 @@ import com.example.ck_android.Screen
 import com.example.ck_android.repositories.ApiClient.ApiConfig
 import com.example.ck_android.ui.screens.content.LightBlueBackground
 import com.example.ck_android.ui.screens.partone.QuestionGrid
+import com.example.ck_android.ui.screens.partsix.PartSixItemViewModel
 
 @Composable
-fun PartSixItemScreen(
+fun PartSevenItemScreen(
     navController: NavController,
-    partSixItemViewModel: PartSixItemViewModel,
+    partSevenItemViewModel: PartSevenItemViewModel,
     mainViewModel: MainViewModel,
     id: String
 ) {
@@ -63,10 +64,10 @@ fun PartSixItemScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val paddingVertical = (screenHeight * 0.1f).dp
 
-    val questionData = partSixItemViewModel.uiState.collectAsState()
+    val questionData = partSevenItemViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        partSixItemViewModel.getPartSixQuestion(id)
+        partSevenItemViewModel.getPartSevenQuestion(id)
     }
     val questionList = questionData.value.data
 

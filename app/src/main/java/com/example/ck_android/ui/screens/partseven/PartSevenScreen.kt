@@ -70,7 +70,7 @@ fun PartSevenScreen(
                 )
             }
             Text(
-                text = "Danh sách Part 6",
+                text = "Danh sách Part 7",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryBlue
