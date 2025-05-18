@@ -14,6 +14,7 @@ import com.example.ck_android.model.GrammarItemResponse
 import com.example.ck_android.model.GrammarResponse
 import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
+import com.example.ck_android.model.PartFourResponse
 import com.example.ck_android.model.PartOneQuestionResponse
 import com.example.ck_android.model.PartOneResponse
 import com.example.ck_android.model.PartThreeQuestionResponse
@@ -215,6 +216,10 @@ class ApiServiceImpl @Inject constructor(
         id: String
     ): PartThreeQuestionResponse {
         return apiClient.apiService.getQuestionPartThree(access_token, id)
+    }
+
+    override suspend fun getPartFourTitle(access_token: String): PartFourResponse {
+        return apiClient.apiService.getPartFourTitle(access_token)
     }
 
 
