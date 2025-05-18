@@ -1,12 +1,10 @@
-package com.example.ck_android.ui.screens.parttwo
+package com.example.ck_android.ui.screens.partfive
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ck_android.common.enum.LoadStatus
-import com.example.ck_android.model.PartOneQuestionResponse
-import com.example.ck_android.model.PartTwoQuestionResponse
-import com.example.ck_android.model.PartTwoResponse
-import com.example.ck_android.model.ScoreResponse
+import com.example.ck_android.model.PartFiveResponse
+import com.example.ck_android.model.PartFourResponse
 import com.example.ck_android.repositories.ApiService
 import com.example.ck_android.repositories.DataStoreManager
 import com.example.ck_android.repositories.MainLog
@@ -18,21 +16,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PartTwoItemViewModel @Inject constructor(
+class PartFiveViewModel @Inject constructor(
     private val apiService: ApiService,
     private val mainLog: MainLog,
-    private val dataStoreManager: DataStoreManager,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
-    val _uiState = MutableStateFlow(PartTwoQuestionResponse())
+    val _uiState = MutableStateFlow(PartFiveResponse())
     val uiState = _uiState.asStateFlow()
 
-    fun getPartTwoQuestion(id: String) {
+    fun getPartFiveTitle() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
             try {
                 val accessToken = dataStoreManager.getAccessToken().first()
-                val response =
-                    requireNotNull(apiService).getQuestionPartTwo("Bearer $accessToken", id)
+                val response = requireNotNull(apiService).getPartFiveTitle("Bearer $accessToken")
                 if (response.statusCode == 200) {
                     _uiState.value = _uiState.value.copy(
                         data = response.data,

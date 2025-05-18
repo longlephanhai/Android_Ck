@@ -26,7 +26,7 @@ class PartFourItemViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
 
-    fun getPartOneQuestion(id: String) {
+    fun getPartFourQuestion(id: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
             try {

@@ -1,4 +1,4 @@
-package com.example.ck_android.ui.screens.partfour
+package com.example.ck_android.ui.screens.partfive
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,14 +41,14 @@ import com.example.ck_android.ui.screens.content.PrimaryBlue
 
 
 @Composable
-fun PartFourScreen(
+fun PartFiveScreen(
     navController: NavController,
-    partFourViewModel: PartFourViewModel,
+    partFiveViewModel: PartFiveViewModel,
     mainViewModel: MainViewModel
 ) {
-    val uiState = partFourViewModel.uiState.collectAsState()
+    val uiState = partFiveViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        partFourViewModel.getPartFourTitle()
+        partFiveViewModel.getPartFiveTitle()
     }
     val data = uiState.value.data
 
@@ -141,12 +141,7 @@ fun PartFourScreen(
                         )
                         Button(
                             onClick = {
-                                val audioUrl = item.audioUrl
-                                navController.currentBackStackEntry?.arguments?.putString(
-                                    "audioUrl",
-                                    audioUrl
-                                )
-                                navController.navigate("part_four_item/${item._id}")
+                                navController.navigate("part_five_item/${item._id}")
                             },
                             modifier = Modifier
                                 .weight(0.2f)

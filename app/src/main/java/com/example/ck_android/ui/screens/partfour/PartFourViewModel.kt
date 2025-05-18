@@ -24,7 +24,7 @@ class PartFourViewModel @Inject constructor(
     val _uiState = MutableStateFlow(PartFourResponse())
     val uiState = _uiState.asStateFlow()
 
-    fun getPartOneTitle() {
+    fun getPartFourTitle() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
             try {

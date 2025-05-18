@@ -35,6 +35,7 @@ fun ContentScreen(
         "Ôn tập Part 2" to Screen.PartTwo.route,
         "Ôn tập Part 3" to Screen.PartThree.route,
         "Ôn tập Part 4" to Screen.PartFour.route,
+        "Ôn tập Part 5" to Screen.PartFive.route,
         "Luyện thi Toeic online" to Screen.Toeic.route,
         "Luyện viết với AI" to Screen.Writing.route,
         "Luyện nói với AI" to Screen.SpeakAi.route

@@ -68,7 +68,7 @@ fun PartFourItemScreen(
     val questionData = partFourItemViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        partFourItemViewModel.getPartOneQuestion(id)
+        partFourItemViewModel.getPartFourQuestion(id)
     }
     val questionList = questionData.value.data
 
