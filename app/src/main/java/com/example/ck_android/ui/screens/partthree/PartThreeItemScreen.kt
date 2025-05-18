@@ -1,10 +1,6 @@
-package com.example.ck_android.ui.screens.parttwo
+package com.example.ck_android.ui.screens.partthree
 
-import android.media.MediaPlayer
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
@@ -31,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -54,12 +46,13 @@ import com.example.ck_android.MainViewModel
 import com.example.ck_android.Screen
 import com.example.ck_android.repositories.ApiClient.ApiConfig
 import com.example.ck_android.ui.screens.content.LightBlueBackground
-import kotlinx.coroutines.delay
+import com.example.ck_android.ui.screens.parttwo.AudioPlayer
+import com.example.ck_android.ui.screens.parttwo.QuestionGrid
 
 @Composable
-fun PartTwoItemScreen(
+fun PartThreeItemScreen(
     navController: NavController,
-    partTwoItemViewModel: PartTwoItemViewModel,
+    partThreeItemViewModel: PartThreeItemViewModel,
     mainViewModel: MainViewModel,
     id: String
 ) {
@@ -71,14 +64,14 @@ fun PartTwoItemScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val paddingVertical = (screenHeight * 0.1f).dp
 
-    val questionData=partTwoItemViewModel.uiState.collectAsState()
+    val questionData = partThreeItemViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        partTwoItemViewModel.getPartTwoQuestion(id)
+        partThreeItemViewModel.getPartThreeQuestion(id)
     }
-    val questionList=questionData.value.data
+    val questionList = questionData.value.data
 
-    val baseUrl= ApiConfig.BASE_BACKEND
+    val baseUrl = ApiConfig.BASE_BACKEND
     val audioUrl = baseUrl + navController.previousBackStackEntry?.arguments?.getString("audioUrl")
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
@@ -303,127 +296,5 @@ fun PartTwoItemScreen(
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun QuestionGrid(
-    questionCount: Int,
-    currentQuestionIndex: Int,
-    answers: Map<Int, String>,
-    onQuestionSelected: (Int) -> Unit
-) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(6), // 6 cột
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .padding(4.dp)
-    ) {
-        items(count = questionCount) { index ->
-            val isSelected = index == currentQuestionIndex
-            val isAnswered = answers.containsKey(index)
-            val backgroundColor = when {
-                isSelected -> Color(0xFFD0E8FF)
-                isAnswered -> Color(0xFFC8E6C9)
-                else -> Color(0xFFF5F5F5) // chưa chọn
-            }
-            val borderColor = when {
-                isSelected -> Color.Blue
-                isAnswered -> Color.Green
-                else -> Color.Gray
-            }
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .width(48.dp)
-                    .height(48.dp)
-                    .background(backgroundColor)
-                    .border(
-                        width = if (isSelected) 2.dp else 1.dp,
-                        color = borderColor
-                    )
-                    .clickable {
-                        onQuestionSelected(index)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "${index+1}")
-            }
-        }
-    }
-}
-
-@Composable
-fun AudioPlayer(audioUrl: String) {
-    var mediaPlayer: MediaPlayer? by remember { mutableStateOf(null) }
-    var isPlaying by remember { mutableStateOf(false) }
-    var currentPosition by remember { mutableStateOf(0f) }
-    var maxPosition by remember { mutableStateOf(0f) }
-
-    // Phát âm thanh
-    fun playAudio() {
-        if (!isPlaying) {
-            mediaPlayer?.release() // Giải phóng bộ nhớ của MediaPlayer trước đó nếu có
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(audioUrl)
-                setOnCompletionListener {
-                    release()
-                    mediaPlayer = null
-                    isPlaying = false
-                }
-                prepareAsync()
-                setOnPreparedListener {
-                    start() // Bắt đầu phát âm thanh
-                    maxPosition = duration.toFloat() // Lưu lại độ dài âm thanh
-                    isPlaying = true
-                }
-            }
-        } else {
-            mediaPlayer?.pause() // Tạm dừng khi đang phát
-            isPlaying = false
-        }
-    }
-
-    // Cập nhật vị trí phát
-    LaunchedEffect(isPlaying) {
-        if (isPlaying) {
-            while (isPlaying) {
-                currentPosition = mediaPlayer?.currentPosition?.toFloat() ?: 0f
-                delay(1000) // Cập nhật mỗi giây
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Nút phát/tạm dừng
-        IconButton(
-            onClick = { playAudio() }
-        ) {
-            Icon(
-                imageVector = if (isPlaying) Icons.Filled.PlayArrow else Icons.Filled.PlayArrow,
-                contentDescription = if (isPlaying) "Tạm dừng phát âm thanh" else "Phát âm thanh",
-                tint = if (isPlaying) Color.Gray else MaterialTheme.colorScheme.primary
-            )
-        }
-        // Thanh tiến trình âm thanh
-        Slider(
-            value = currentPosition,
-            onValueChange = { value ->
-                mediaPlayer?.seekTo(value.toInt()) // Di chuyển đến vị trí mới
-            },
-            valueRange = 0f..maxPosition,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-        )
-
-        // Hiển thị thời gian đã qua
-        Text(text = "${(currentPosition / 1000).toInt()} giây đã qua")
     }
 }

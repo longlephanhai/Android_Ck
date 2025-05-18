@@ -16,6 +16,7 @@ import com.example.ck_android.model.LoginRequest
 import com.example.ck_android.model.LoginRespon
 import com.example.ck_android.model.PartOneQuestionResponse
 import com.example.ck_android.model.PartOneResponse
+import com.example.ck_android.model.PartThreeQuestionResponse
 import com.example.ck_android.model.PartThreeResponse
 import com.example.ck_android.model.PartTwoQuestionResponse
 import com.example.ck_android.model.PartTwoResponse
@@ -210,9 +211,17 @@ interface ApiService {
         @Path("id") id: String
     ): PartTwoQuestionResponse
 
-    // api part two
+    // api part three
     @GET("partthree")
     suspend fun getPartThreeTitle(
         @Header("Authorization") access_token: String
     ): PartThreeResponse
+
+    // api question part three
+    @GET("questionpartthree/{id}")
+    suspend fun getQuestionPartThree(
+        @Header("Authorization") access_token: String,
+        @Path("id") id: String
+    ): PartThreeQuestionResponse
+
 }

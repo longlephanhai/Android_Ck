@@ -31,6 +31,8 @@ import com.example.ck_android.ui.screens.partone.PartOneItemViewModel
 import com.example.ck_android.ui.screens.partone.PartOneResultScreen
 import com.example.ck_android.ui.screens.partone.PartOneScreen
 import com.example.ck_android.ui.screens.partone.PartOneViewModel
+import com.example.ck_android.ui.screens.partthree.PartThreeItemScreen
+import com.example.ck_android.ui.screens.partthree.PartThreeItemViewModel
 import com.example.ck_android.ui.screens.partthree.PartThreeScreen
 import com.example.ck_android.ui.screens.partthree.PartThreeViewModel
 import com.example.ck_android.ui.screens.parttwo.PartTwoItemScreen
@@ -91,6 +93,7 @@ sealed class Screen(val route: String) {
     object PartTwo : Screen("part_two")
     object PartTwoItem : Screen("part_two_item/{id}")
     object PartThree : Screen("part_three")
+    object PartThreeItem : Screen("part_three_item/{id}")
 }
 
 @Composable
@@ -364,6 +367,19 @@ fun Navigation() {
                 navController = navController,
                 partThreeViewModel = hiltViewModel<PartThreeViewModel>(),
                 mainViewModel = mainViewModel
+            )
+        }
+        composable(
+            Screen.PartThreeItem.route,
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+            )
+        ) {
+            PartThreeItemScreen(
+                navController = navController,
+                partThreeItemViewModel = hiltViewModel<PartThreeItemViewModel>(),
+                mainViewModel = mainViewModel,
+                id = it.arguments?.getString("id") ?: "",
             )
         }
     }
