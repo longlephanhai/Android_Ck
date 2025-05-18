@@ -71,7 +71,7 @@ fun PartFiveScreen(
                 )
             }
             Text(
-                text = "Danh sách Part 4",
+                text = "Danh sách Part 5",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryBlue
